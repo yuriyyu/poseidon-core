@@ -1,2 +1,2 @@
 # poseidon
-Schedule Course
+MUMSched is course schedule that is meant the be used at every entry.
