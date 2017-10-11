@@ -4,22 +4,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
+/**
+ * Created by Yuriy Yugay on 10/10/2017.
+ *
+ * @author Yuriy Yugay
+ */
 @Entity
-@Table(name = "blocks")
-public class Block
+@Table(name = "entries")
+public class Entry
         extends AbstractEntity {
 
-    private String name;
     private LocalDate startDate;
     private LocalDate endDate;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public LocalDate getStartDate() {
         return startDate;
