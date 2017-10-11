@@ -1,7 +1,7 @@
 package edu.mum.se.poseidon.core.services;
 
 import edu.mum.se.poseidon.core.repositories.models.Section;
-import edu.mum.se.poseidon.core.repositories.models.Student;
+import edu.mum.se.poseidon.core.repositories.models.users.Student;
 
 import java.util.List;
 
