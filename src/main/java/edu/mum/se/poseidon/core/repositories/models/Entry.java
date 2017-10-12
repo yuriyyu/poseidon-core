@@ -15,7 +15,6 @@ public class Entry
         extends AbstractEntity {
 
     private LocalDate startDate;
-    private LocalDate endDate;
     private Integer nFppStudents;
     private Integer nMppStudents;
     private Integer nFppOpt;
@@ -28,14 +27,6 @@ public class Entry
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public Integer getnFppStudents() {
