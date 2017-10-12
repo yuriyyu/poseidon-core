@@ -21,7 +21,7 @@ public class StudentController {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(path="/students", method = RequestMethod.POST)
 	public ResponseEntity<?> create(@PathVariable String username, 
 				@PathVariable String password) {
 		return new ResponseEntity(this.studentService.createStudent(username, password),
