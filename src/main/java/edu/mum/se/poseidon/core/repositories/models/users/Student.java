@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "students")
-@PrimaryKeyJoinColumn(name= "student_id",referencedColumnName = "id")
+@PrimaryKeyJoinColumn(name= "id",referencedColumnName = "id")
 public class Student
         extends User {
 
