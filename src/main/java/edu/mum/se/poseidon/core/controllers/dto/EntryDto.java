@@ -1,24 +1,8 @@
-package edu.mum.se.poseidon.core.repositories.models;
+package edu.mum.se.poseidon.core.controllers.dto;
 
-import edu.mum.se.poseidon.core.repositories.models.users.Student;
-
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
-/**
- * Created by Yuriy Yugay on 10/10/2017.
- *
- * @author Yuriy Yugay
- */
-@Entity
-@Table(name = "entries")
-public class Entry
-        extends AbstractEntity {
+public class EntryDto {
 
     private LocalDate startDate;
     private Integer nFppStudents;
@@ -27,13 +11,6 @@ public class Entry
     private Integer nMppOpt;
     private Integer usRes;
     private String name;
-
-    @OneToMany
-    @JoinTable(name = "fk_entries_blocks")
-    private Set<Block> blockSet;
-    @OneToMany
-    @JoinTable(name = "fk_entries_studnets")
-    private Set<Student> studentSet;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -89,21 +66,5 @@ public class Entry
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<Block> getBlockSet() {
-        return blockSet;
-    }
-
-    public void setBlockSet(Set<Block> blockSet) {
-        this.blockSet = blockSet;
-    }
-
-    public Set<Student> getStudentSet() {
-        return studentSet;
-    }
-
-    public void setStudentSet(Set<Student> studentSet) {
-        this.studentSet = studentSet;
     }
 }
