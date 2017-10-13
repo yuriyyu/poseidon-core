@@ -33,6 +33,7 @@ public class StudentController {
 				HttpStatus.NOT_FOUND);
 	}
 
+	@RequestMapping(path = "/students/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getStudent(@PathVariable(name = "id", required = true) long id) {
         Student student = studentService.getStudent(id);
         StudentDto dto = studentToDto.getStudentDtoFrom(student);
