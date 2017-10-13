@@ -4,6 +4,9 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.mum.se.poseidon.core.controllers.dto.StudentDto;
+import edu.mum.se.poseidon.core.controllers.mapper.StudentToDto;
+import edu.mum.se.poseidon.core.repositories.models.users.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +25,12 @@ public class StudentController {
 
 	private StudentService studentService;
 	private static final Logger log = LoggerFactory.getLogger(StudentController.class);
+	private StudentToDto studentToDto;
 	
 	@Autowired
-	public StudentController(StudentService studentSerive){
-		this.studentService = studentSerive;
+	public StudentController(StudentService studentService, StudentToDto studentToDto){
+		this.studentService = studentService;
+		this.studentToDto = studentToDto;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -33,7 +38,15 @@ public class StudentController {
 	public ResponseEntity<?> create(@RequestBody User user) {
 		
 		log.info(user.getFirstName());
-		return new ResponseEntity(this.studentService.createStudent(user),
-				HttpStatus.NOT_FOUND);
+		Student student = this.studentService.createStudent(user);
+		return new ResponseEntity(student, HttpStatus.OK);
 	}
+
+	@RequestMapping(path = "/students/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getStudent(@PathVariable(name = "id", required = true) long id) {
+        Student student = studentService.getStudent(id);
+        StudentDto dto = studentToDto.getStudentDtoFrom(student);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 }

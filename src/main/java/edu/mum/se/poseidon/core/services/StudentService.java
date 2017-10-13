@@ -23,5 +23,9 @@ public class StudentService {
 		student = studentRepository.save(student);
 		return student;
 	}
+
+	public Student getStudent(long studentId) {
+		return studentRepository.findOne(studentId);
+	}
 	
 }
