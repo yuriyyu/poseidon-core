@@ -18,7 +18,7 @@ public class EntryService {
     }
 
     public Entry createEntry(LocalDate startDate, Integer nFppStudents, Integer nMppStudents, Integer nFppOpt,
-                             Integer nMppOpt, Integer usRes) {
+                             Integer nMppOpt, Integer usRes, String name) {
         Entry entry = new Entry();
         entry.setStartDate(startDate);
         entry.setnFppStudents(nFppStudents);
@@ -26,6 +26,7 @@ public class EntryService {
         entry.setnFppOpt(nFppOpt);
         entry.setnMppOpt(nMppOpt);
         entry.setUsRes(usRes);
+        entry.setName(name);
         entryRepository.save(entry);
         return entry;
     }

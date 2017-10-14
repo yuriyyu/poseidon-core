@@ -1,6 +1,8 @@
 package edu.mum.se.poseidon.core.repositories.models;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
@@ -12,6 +14,9 @@ public class Block
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @ManyToOne
+    private Entry entry;
 
     public String getName() {
         return name;
