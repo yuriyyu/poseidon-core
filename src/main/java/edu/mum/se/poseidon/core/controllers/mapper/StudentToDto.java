@@ -12,6 +12,9 @@ public class StudentToDto {
     }
 
     public StudentDto getStudentDtoFrom(Student student) {
+        if(student == null)  {
+            return null;
+        }
         StudentDto dto = new StudentDto();
         dto.setId(student.getId());
         dto.setFirstName(student.getFirstName());
