@@ -32,7 +32,7 @@ public class Entry
     @JoinTable(name = "fk_entries_blocks")
     private Set<Block> blockSet;
     @OneToMany
-    @JoinTable(name = "fk_entries_studnets")
+    @JoinTable(name = "fk_entries_students")
     private Set<Student> studentSet;
 
     public LocalDate getStartDate() {
