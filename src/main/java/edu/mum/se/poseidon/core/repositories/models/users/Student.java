@@ -1,5 +1,6 @@
 package edu.mum.se.poseidon.core.repositories.models.users;
 
+import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 
 import javax.persistence.*;
@@ -12,6 +13,9 @@ public class Student
         extends User {
 
     private String studentId;
+    @ManyToOne
+    @JoinColumn(name = "ENTRY_ID", nullable = false)
+    private Entry entry;
     @ManyToMany
     @JoinTable(name = "sections_students")
     private List<Section> sectionList;

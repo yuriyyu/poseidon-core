@@ -44,7 +44,7 @@ public class RegistrationImp implements IRegistration {
         List<Section> sectionList = sectionRepository.findAll();
         List<Section> studentSectionList = sectionRepository.findSectionsByStudentId(studentId);
         Long totalNumber = studentSectionList.stream()
-                .map(s -> courseRepository.findCourseBySection(s))
+                .map(s -> courseRepository.findCourseBySectionId(s.getId()))
                 .filter(c -> c.getName().equals(nameOfCourseFPP))
                 .filter(c -> c.getName().equals(nameOfCourseMPP))
                 .count();
@@ -53,14 +53,14 @@ public class RegistrationImp implements IRegistration {
         }
         // checks that student studied course's pre-requisite
         for (Section section : sectionList) {
-            Course course = courseRepository.findCourseBySection(section);
+            Course course = courseRepository.findCourseBySectionId(section.getId());
             List<Course> prerequisiteList = course.getPrerequisites();
             if (prerequisiteList == null || prerequisiteList.isEmpty()) {
                 retVal.add(section);
                 continue;
             }
             for (Section studentSection : studentSectionList) {
-                Course course1 = courseRepository.findCourseBySection(section);
+                Course course1 = courseRepository.findCourseBySectionId(section.getId());
                 if (prerequisiteList.contains(course1)) {
                     retVal.add(section);
                     break;

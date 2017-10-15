@@ -1,6 +1,7 @@
 package edu.mum.se.poseidon.core.repositories.models;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class Block
     private LocalDate endDate;
 
     @ManyToOne
+    @JoinColumn(name = "ENTRY_ID", nullable = false)
     private Entry entry;
 
     public String getName() {

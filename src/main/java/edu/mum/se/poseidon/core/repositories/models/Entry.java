@@ -2,10 +2,7 @@ package edu.mum.se.poseidon.core.repositories.models;
 
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,9 +24,9 @@ public class Entry
     private Integer usRes;
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry")
     private List<Block> blockList;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry")
     private List<Student> studentList;
 
     public LocalDate getStartDate() {
