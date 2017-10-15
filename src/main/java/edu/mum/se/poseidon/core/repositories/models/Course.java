@@ -1,9 +1,6 @@
 package edu.mum.se.poseidon.core.repositories.models;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -18,9 +15,12 @@ public class Course
 
     private String name;
     private Integer number;
-    @OneToMany
+    @ManyToOne
+    private Course course;
+    @OneToMany(mappedBy = "course")
     private List<Course> prerequisites;
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "COURSE_ID")
     private List<Section> sectionList;
 
     public String getName() {
