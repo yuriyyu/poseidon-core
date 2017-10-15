@@ -7,7 +7,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by Yuriy Yugay on 10/10/2017.
@@ -28,11 +28,9 @@ public class Entry
     private String name;
 
     @OneToMany
-    @JoinTable(name = "fk_entries_blocks")
-    private Set<Block> blockSet;
+    private List<Block> blockList;
     @OneToMany
-    @JoinTable(name = "fk_entries_students")
-    private Set<Student> studentSet;
+    private List<Student> studentList;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -90,19 +88,19 @@ public class Entry
         this.name = name;
     }
 
-    public Set<Block> getBlockSet() {
-        return blockSet;
+    public List<Block> getBlockList() {
+        return blockList;
     }
 
-    public void setBlockSet(Set<Block> blockSet) {
-        this.blockSet = blockSet;
+    public void setBlockList(List<Block> blockList) {
+        this.blockList = blockList;
     }
 
-    public Set<Student> getStudentSet() {
-        return studentSet;
+    public List<Student> getStudentList() {
+        return studentList;
     }
 
-    public void setStudentSet(Set<Student> studentSet) {
-        this.studentSet = studentSet;
+    public void setStudentList(List<Student> studentList) {
+        this.studentList = studentList;
     }
 }
