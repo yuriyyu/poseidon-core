@@ -3,12 +3,9 @@ package edu.mum.se.poseidon.core.repositories.models;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "sections")
@@ -17,14 +14,15 @@ public class Section
 
     private Integer maxSeats;
     private String location;
-    private Block block;
-    private Faculty faculty;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Block block;
 
-    @ManyToMany
-    @JoinTable (name = "fk_sections_students")
-    private Set<Student> studentSet;
+    @ManyToOne
+    @JoinColumn(name = "FACULTY_ID", nullable = false)
+    private Faculty faculty;
+    @ManyToMany(mappedBy = "sectionList")
+    private List<Student> studentList;
 
     public Integer getMaxSeats() {
         return maxSeats;
@@ -74,11 +72,11 @@ public class Section
         this.endDate = endDate;
     }
 
-    public Set<Student> getStudentSet() {
-        return studentSet;
+    public List<Student> getStudentList() {
+        return studentList;
     }
 
-    public void setStudentSet(Set<Student> studentSet) {
-        this.studentSet = studentSet;
+    public void setStudentList(List<Student> studentList) {
+        this.studentList = studentList;
     }
 }
