@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 public class EntryDto {
 
-    private LocalDate startDate;
+    private Long id;
+    private String startDate;
     private Integer nFppStudents;
     private Integer nMppStudents;
     private Integer nFppOpt;
@@ -12,11 +13,19 @@ public class EntryDto {
     private Integer usRes;
     private String name;
 
-    public LocalDate getStartDate() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
