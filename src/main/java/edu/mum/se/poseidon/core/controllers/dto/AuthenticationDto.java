@@ -2,28 +2,44 @@ package edu.mum.se.poseidon.core.controllers.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class AuthenticationDto {
+	@NotNull
+	@NotEmpty
 	private String username;
+
+	@NotNull
+	@NotEmpty
 	private String password;
-	private List<String>roles;
-	
+
+	@NotNull
+	private List<String> roles;
+
 	public String getUsername() {
 		return username;
 	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public List<String> getRoles() {
 		return roles;
 	}
+
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	
+
 }

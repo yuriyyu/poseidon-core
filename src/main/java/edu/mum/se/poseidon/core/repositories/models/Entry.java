@@ -26,8 +26,12 @@ public class Entry
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry")
     private List<Block> blockList;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry")
     private List<Student> studentList;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    private Schedule schedule;
 
     public LocalDate getStartDate() {
         return startDate;
