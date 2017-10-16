@@ -9,12 +9,11 @@ import java.util.List;
 @Entity
 @Table(name = "students")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
-public class Student
-        extends User {
+public class Student extends User {
 
     private String studentId;
     @ManyToOne
-    @JoinColumn(name = "ENTRY_ID", nullable = false)
+    @JoinColumn(name = "entry_id", nullable = true)
     private Entry entry;
     @ManyToMany
     @JoinTable(name = "sections_students")
