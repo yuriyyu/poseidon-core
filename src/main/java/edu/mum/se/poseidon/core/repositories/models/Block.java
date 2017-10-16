@@ -27,7 +27,15 @@ public class Block
         this.name = name;
     }
 
-    public LocalDate getStartDate() {
+    public Entry getEntry() {
+		return entry;
+	}
+
+	public void setEntry(Entry entry) {
+		this.entry = entry;
+	}
+
+	public LocalDate getStartDate() {
         return startDate;
     }
 
