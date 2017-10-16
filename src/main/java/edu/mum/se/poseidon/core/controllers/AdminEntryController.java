@@ -53,7 +53,7 @@ public class AdminEntryController {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(path = "/entries/delete", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/entries/delete/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteEntry(@PathVariable(name = "id") long id) {
         log.debug("'Delete entry' request is received. Entry ID=" + id);
         try {
@@ -82,7 +82,7 @@ public class AdminEntryController {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(path = "/entries/edit", method = RequestMethod.PUT)
+    @RequestMapping(path = "/entries/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editEntry(@RequestBody EntryDto entryDto) {
         log.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
         try {
