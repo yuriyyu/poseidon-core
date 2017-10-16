@@ -19,7 +19,7 @@ public class EntryService {
     }
 
     public Entry createEntry(Entry entry) throws PoseidonException {
-        if (entryRepository.findByStartDate(entry.getStartDate()) == null) {
+        if (entryRepository.findEntryByStartDate(entry.getStartDate()) == null) {
             entryRepository.save(entry);
             return entry;
         } else {
@@ -27,25 +27,25 @@ public class EntryService {
         }
     }
 
-    public Entry deleteEntry(Long id) throws PoseidonException {
+    public void deleteEntry(Long id) throws PoseidonException {
         Entry entry = entryRepository.getOne(id);
         if (entry == null) {
             throw new PoseidonException("Entry is not found with this id.");
         } else {
-            entryRepository.delete(entry);
-            return entry;
+            entry.setDeleted(true);
+            entryRepository.save(entry);
         }
     }
 
-    public List<Entry> readEntryList() {
-        return entryRepository.findAll();
+    public List<Entry> getEntryList() {
+        return entryRepository.findEntriesByDeleted(false);
     }
 
-    public Entry readEntry(Long id) {
+    public Entry getEntry(Long id) {
         return entryRepository.findOne(id);
     }
 
-    public Entry updateEntry(Entry entry) throws PoseidonException {
+    public Entry editEntry(Entry entry) throws PoseidonException {
         if (entryRepository.exists(entry.getId())) {
             entryRepository.save(entry);
             return entry;

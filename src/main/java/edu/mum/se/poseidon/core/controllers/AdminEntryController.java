@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class AdminEntryController {
 
@@ -32,12 +35,12 @@ public class AdminEntryController {
         this.entryMapper = entryMapper;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @RequestMapping(path = "/entry/create", method = RequestMethod.POST)
+    @SuppressWarnings("unchecked")
+    @RequestMapping(path = "/entries/create", method = RequestMethod.POST)
     public ResponseEntity<?> createEntry(@RequestBody EntryDto entryDto) {
         log.debug("'Create entry' request is received. Entry name=" + entryDto.getName());
-        Entry entry = entryMapper.getEntryFrom(entryDto);
         try {
+            Entry entry = entryMapper.getEntryFrom(entryDto);
             EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.createEntry(entry));
             return new ResponseEntity(entryDto1, HttpStatus.OK);
         } catch (PoseidonException pe) {
@@ -49,16 +52,61 @@ public class AdminEntryController {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @RequestMapping(path = "/entry/delete", method = RequestMethod.DELETE)
+    @SuppressWarnings("unchecked")
+    @RequestMapping(path = "/entries/delete", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEntry(@PathVariable(name = "id") long id) {
-        log.debug("'Delete entry' request is received. Entry name=" + id);
+        log.debug("'Delete entry' request is received. Entry ID=" + id);
         try {
-            EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.deleteEntry(id));
-            return new ResponseEntity(entryDto1, HttpStatus.OK);
+            entryService.deleteEntry(id);
+            return new ResponseEntity(new EntryDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
             FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
             return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
+            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(path = "/entries/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getEntry(@PathVariable long id) {
+        log.debug("'Get entry' request is received. Entry ID=" + id);
+        try {
+            EntryDto entryDto = entryMapper.getEntryDtoFrom(entryService.getEntry(id));
+            return new ResponseEntity<>(entryDto, HttpStatus.OK);
+        } catch (Exception e) {
+            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
+            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(path = "/entries/edit", method = RequestMethod.PUT)
+    public ResponseEntity<?> editEntry(@RequestBody EntryDto entryDto) {
+        log.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
+        try {
+            Entry entry = entryMapper.getEntryFrom(entryDto);
+            EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.editEntry(entry));
+            return new ResponseEntity<>(entryDto1, HttpStatus.OK);
+        } catch (PoseidonException pe) {
+            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
+            return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
+            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(path = "/entries", method = RequestMethod.GET)
+    public ResponseEntity<?> getEntryList() {
+        try {
+            List<Entry> entryList = entryService.getEntryList();
+            List<EntryDto> entryDtoList = entryList.stream()
+                    .map(e -> entryMapper.getEntryDtoFrom(e))
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(entryDtoList, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
             return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
