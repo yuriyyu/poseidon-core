@@ -1,6 +1,6 @@
 package edu.mum.se.poseidon.core.services;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
+import edu.mum.se.poseidon.core.controllers.PoseidonException;
 import edu.mum.se.poseidon.core.repositories.EntryRepository;
 import edu.mum.se.poseidon.core.repositories.models.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +18,19 @@ public class EntryService {
         this.entryRepository = entryRepository;
     }
 
-    public Entry createEntry(Entry entry) throws InvalidArgumentException {
+    public Entry createEntry(Entry entry) throws PoseidonException {
         if (entryRepository.findByStartDate(entry.getStartDate()) == null) {
             entryRepository.save(entry);
             return entry;
         } else {
-            throw new InvalidArgumentException(new String[]{"Entry is already created this with this startDate."});
+            throw new PoseidonException("Entry is already created this with this startDate.");
         }
     }
 
-    public Entry deleteEntry(Long id) throws InvalidArgumentException {
+    public Entry deleteEntry(Long id) throws PoseidonException {
         Entry entry = entryRepository.getOne(id);
         if (entry == null) {
-            throw new InvalidArgumentException(new String[]{"Entry is not found with this id."});
+            throw new PoseidonException("Entry is not found with this id.");
         } else {
             entryRepository.delete(entry);
             return entry;
@@ -45,12 +45,12 @@ public class EntryService {
         return entryRepository.findOne(id);
     }
 
-    public Entry updateEntry(Entry entry) throws InvalidArgumentException {
+    public Entry updateEntry(Entry entry) throws PoseidonException {
         if (entryRepository.exists(entry.getId())) {
             entryRepository.save(entry);
             return entry;
         } else {
-            throw new InvalidArgumentException(new String[]{"Entry is not found with this id."});
+            throw new PoseidonException("Entry is not found with this id.");
         }
     }
 }

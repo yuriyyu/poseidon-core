@@ -1,6 +1,6 @@
 package edu.mum.se.poseidon.core.services.RegistrationSubsystem;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
+import edu.mum.se.poseidon.core.controllers.PoseidonException;
 import edu.mum.se.poseidon.core.repositories.CourseRepository;
 import edu.mum.se.poseidon.core.repositories.SectionRepository;
 import edu.mum.se.poseidon.core.repositories.StudentRepository;
@@ -20,14 +20,14 @@ public class RegistrationImp implements IRegistration {
     private CourseRepository courseRepository;
 
     @Override
-    public void registerToSection(Long studentId, Long sectionId) throws InvalidArgumentException {
+    public void registerToSection(Long studentId, Long sectionId) throws PoseidonException {
         Section section = sectionRepository.findOne(sectionId);
         if (section == null) {
-            throw new InvalidArgumentException(new String[]{"Section is not found with this Id."});
+            throw new PoseidonException("Section is not found with this Id.");
         }
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
-            throw new InvalidArgumentException(new String[]{"Student is not found with this Id."});
+            throw new PoseidonException("Student is not found with this Id.");
         }
         section.getStudentList().add(student);
         student.getSectionList().add(section);
@@ -36,7 +36,7 @@ public class RegistrationImp implements IRegistration {
     }
 
     @Override
-    public List<Section> getAvailableSections(Long studentId) throws InvalidArgumentException {
+    public List<Section> getAvailableSections(Long studentId) throws PoseidonException {
         final String nameOfCourseFPP = "FPP";
         final String nameOfCourseMPP = "MPP";
         final Long numberOfCourseFPPAndMPP = 2L;
@@ -49,7 +49,7 @@ public class RegistrationImp implements IRegistration {
                 .filter(c -> c.getName().equals(nameOfCourseMPP))
                 .count();
         if (!totalNumber.equals(numberOfCourseFPPAndMPP)) {
-            throw new InvalidArgumentException(new String[]{"Student must be completed 'MPP' course."});
+            throw new PoseidonException("Student must be completed 'MPP' course.");
         }
         // checks that student studied course's pre-requisite
         for (Section section : sectionList) {
