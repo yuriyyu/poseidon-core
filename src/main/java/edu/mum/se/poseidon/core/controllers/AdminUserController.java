@@ -1,12 +1,11 @@
 package edu.mum.se.poseidon.core.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -56,10 +55,9 @@ public class AdminUserController {
 	@RequestMapping(path="/users", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserList(){
 		List<User> users = userService.getUserList();
-		List<UserDto> dtos = new ArrayList<>();
-		for(User user: users) {
-			dtos.add(userMapper.getUserDto(user));
-		}
+		List<UserDto> dtos = users.stream()
+				.map(u -> userMapper.getUserDto(u))
+				.collect(Collectors.toList());
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 	
