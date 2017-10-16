@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by Yuriy Yugay on 10/11/2017.
+ * Created by Munkhtsot Tsogbadrakh on 10/11/2017.
  *
- * @author Yuriy Yugay
+ * @author Munkhtsot Tsogbadrakh
  */
 @Service
 public class UserService {
@@ -85,7 +85,28 @@ public class UserService {
     	}
 	}
     
+    public User editUser(UserDto userDto) {
+    	User user = userRepository.findOne(userDto.getId());
+    	user.setFirstName(userDto.getFirstName());
+    	user.setLastName(userDto.getLastName());
+    	user.setUsername(userDto.getUsername());
+    	user.setPassword(userDto.getPassword());
+    	// user.setType(userDto.getType());
+    	user = userRepository.save(user);
+    	return user;
+    }
+    
     public List<User> getUserList(){
-    	return userRepository.findAll();
+    	return userRepository.findAllByDeleted(false);
+    }
+    
+    public User getUser(long userId) {
+    	return userRepository.findOne(userId);
+    }
+    
+    public void deleteUser(long userId) {
+    	User user = userRepository.findOne(userId);
+    	user.setDeleted(true);
+    	userRepository.save(user);
     }
 }

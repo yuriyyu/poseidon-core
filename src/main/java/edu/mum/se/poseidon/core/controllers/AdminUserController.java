@@ -1,0 +1,71 @@
+package edu.mum.se.poseidon.core.controllers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import edu.mum.se.poseidon.core.controllers.dto.UserDto;
+import edu.mum.se.poseidon.core.controllers.mapper.UserMapper;
+import edu.mum.se.poseidon.core.repositories.models.users.User;
+import edu.mum.se.poseidon.core.services.UserService;
+
+@Controller
+public class AdminUserController {
+	private UserService userService;
+	private UserMapper userMapper;
+	private static final Logger log = LoggerFactory.getLogger(AdminUserController.class);
+	
+	@Autowired
+	public AdminUserController(UserService userService, UserMapper userMapper) {
+		this.userService = userService;
+		this.userMapper = userMapper;
+	}
+	
+	@RequestMapping(path="/users/create", method = RequestMethod.POST)
+	public ResponseEntity<?> create(@RequestBody UserDto userDto) {
+		User user = this.userService.createUser(userDto);
+		UserDto udo = userMapper.getUserDto(user);
+		return new ResponseEntity<>(udo, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/users/edit", method = RequestMethod.POST)
+	public ResponseEntity<?> edit(@RequestBody UserDto userDto) {
+		User user = this.userService.editUser(userDto);
+		UserDto udo = userMapper.getUserDto(user);
+		return new ResponseEntity<>(udo, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/users/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getUser(@PathVariable long id){
+		User user = userService.getUser(id);
+		UserDto udo = userMapper.getUserDto(user);
+		return new ResponseEntity<>(udo, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/users", method = RequestMethod.GET)
+	public ResponseEntity<?> getUserList(){
+		List<User> users = userService.getUserList();
+		List<UserDto> dtos = new ArrayList<>();
+		for(User user: users) {
+			dtos.add(userMapper.getUserDto(user));
+		}
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/users/delete/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> deleteUser(@PathVariable long id){
+		userService.deleteUser(id);
+		return new ResponseEntity<>(new UserDto(), HttpStatus.OK);
+	}
+}
