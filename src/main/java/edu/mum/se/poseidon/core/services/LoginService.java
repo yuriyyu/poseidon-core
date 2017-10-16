@@ -8,15 +8,21 @@ import org.springframework.stereotype.Service;
 @Service("loginService")
 public class LoginService {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    @Autowired
-    public LoginService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	@Autowired
+	public LoginService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    public void login(String userName, String password) {
-        User user = userRepository.findUserByUsername(userName);
-        user.getPassword();
-    }
+	/*
+	 * WILL BE REMOVED
+	 */
+	public void login(String userName, String password) {
+		User user = userRepository.findUserByUsername(userName);
+	}
+
+	public User getUser(String username) {
+		return userRepository.findUserByUsername(username);
+	}
 }
