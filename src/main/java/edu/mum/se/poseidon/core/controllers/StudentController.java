@@ -27,7 +27,7 @@ public class StudentController {
 	}
 	
 	@RequestMapping(path = "/students/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getStudent(@PathVariable(name = "id", required = true) long id) {
+	public ResponseEntity<?> getStudent(@PathVariable(name = "id") long id) {
         Student student = studentService.getStudent(id);
         StudentDto dto = studentToDto.getStudentDtoFrom(student);
 

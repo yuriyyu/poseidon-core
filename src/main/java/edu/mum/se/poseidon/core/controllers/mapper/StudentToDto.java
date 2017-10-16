@@ -15,10 +15,14 @@ public class StudentToDto {
         if(student == null)  {
             return null;
         }
+
         StudentDto dto = new StudentDto();
         dto.setId(student.getId());
         dto.setFirstName(student.getFirstName());
         dto.setLastName(student.getLastName());
+        dto.setUsername(student.getUsername());
+        dto.setPassword(student.getPassword());
+
         return dto;
     }
 }
