@@ -62,7 +62,7 @@ public class AdminBlockController {
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 	
-	@RequestMapping(path="/blocks/delete/{id}", method = RequestMethod.GET)
+	@RequestMapping(path="/blocks/{id}/delete", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteUser(@PathVariable long id){
 		blockService.deleteBlock(id);
 		return new ResponseEntity<>(new BlockDto(), HttpStatus.OK);

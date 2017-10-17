@@ -61,7 +61,7 @@ public class AdminUserController {
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 	
-	@RequestMapping(path="/users/delete/{id}", method = RequestMethod.GET)
+	@RequestMapping(path="/users/{id}/delete", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteUser(@PathVariable long id){
 		userService.deleteUser(id);
 		return new ResponseEntity<>(new UserDto(), HttpStatus.OK);
