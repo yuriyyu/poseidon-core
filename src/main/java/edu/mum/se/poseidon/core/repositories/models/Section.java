@@ -23,8 +23,8 @@ public class Section
     @ManyToOne
     @JoinColumn(name = "FACULTY_ID", nullable = false)
     private Faculty faculty;
-    @ManyToMany(mappedBy = "sectionList")
-    private List<Student> studentList;
+    @OneToMany(mappedBy = "id.section")
+    private List<StudentSection> studentSections;
 
     public Integer getMaxSeats() {
         return maxSeats;
@@ -74,11 +74,11 @@ public class Section
         this.endDate = endDate;
     }
 
-    public List<Student> getStudentList() {
-        return studentList;
+    public List<StudentSection> getStudentSections() {
+        return studentSections;
     }
 
-    public void setStudentList(List<Student> studentList) {
-        this.studentList = studentList;
+    public void setStudentSections(List<StudentSection> studentSections) {
+        this.studentSections = studentSections;
     }
 }

@@ -29,8 +29,8 @@ public class RegistrationImp implements IRegistration {
         if (student == null) {
             throw new PoseidonException("Student is not found with this Id.");
         }
-        section.getStudentList().add(student);
-        student.getSectionList().add(section);
+        //section.getStudentList().add(student);
+        //student.getSectionList().add(section);
         studentRepository.save(student);
         sectionRepository.save(section);
     }
@@ -42,7 +42,8 @@ public class RegistrationImp implements IRegistration {
         final Long numberOfCourseFPPAndMPP = 2L;
         List<Section> retVal = new ArrayList<>();
         List<Section> sectionList = sectionRepository.findAll();
-        List<Section> studentSectionList = sectionRepository.findSectionsByStudentId(studentId);
+//        List<Section> studentSectionList = sectionRepository.findSectionsByStudentId(studentId);
+        List<Section> studentSectionList = null;
         Long totalNumber = studentSectionList.stream()
                 .map(s -> courseRepository.findCourseBySectionId(s.getId()))
                 .filter(c -> c.getName().equals(nameOfCourseFPP))
@@ -72,6 +73,7 @@ public class RegistrationImp implements IRegistration {
 
     @Override
     public List<Section> getRegisteredSectionByStudent(Long studentId) {
-        return sectionRepository.findSectionsByStudentId(studentId);
+//        return sectionRepository.findSectionsByStudentId(studentId);
+        return null;
     }
 }

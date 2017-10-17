@@ -5,6 +5,7 @@ import edu.mum.se.poseidon.core.controllers.mapper.EntryMapper;
 import edu.mum.se.poseidon.core.controllers.wrapper.ErrorResponseWrapper;
 import edu.mum.se.poseidon.core.controllers.wrapper.FailResponseWrapper;
 import edu.mum.se.poseidon.core.repositories.models.Entry;
+import edu.mum.se.poseidon.core.services.BlockService;
 import edu.mum.se.poseidon.core.services.EntryService;
 
 import org.slf4j.Logger;
@@ -25,14 +26,15 @@ import java.util.stream.Collectors;
 public class AdminEntryController {
 
     private EntryService entryService;
-    //private BlockService blockService;
+    private BlockService blockService;
     private static final Logger log = LoggerFactory.getLogger(AdminEntryController.class);
     private EntryMapper entryMapper;
 
     @Autowired
-    public AdminEntryController(EntryService entryService, EntryMapper entryMapper) {
+    public AdminEntryController(EntryService entryService, EntryMapper entryMapper, BlockService blockService) {
         this.entryService = entryService;
         this.entryMapper = entryMapper;
+        this.blockService = blockService;
     }
 
     @SuppressWarnings("unchecked")
@@ -126,14 +128,14 @@ public class AdminEntryController {
         if (entry.getnFppStudents() > 0) {
             fpp = 1;
         }
-        if (entry.getUsRes() > 0) {
-            elective = 8;
-        } else if (entry.getnFppOpt() > 0) {
-            elective = 5;
+        if (entry.getnMppOpt() == 0 && entry.getnFppOpt() == 0) {
+            elective = 4;
         } else if (entry.getnMppOpt() > 0) {
             elective = 5;
-        } else if (entry.getnMppOpt() == 0 && entry.getnFppOpt() == 0) {
-            elective = 4;
+        } else if (entry.getnFppOpt() > 0) {
+            elective = 5;
+        } else if (entry.getUsRes() > 0) {
+            elective = 8;
         }
         retVal = sci + fpp + mpp + elective + career;
         return retVal;

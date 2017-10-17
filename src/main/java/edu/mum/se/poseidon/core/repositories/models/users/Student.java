@@ -2,6 +2,7 @@ package edu.mum.se.poseidon.core.repositories.models.users;
 
 import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.repositories.models.Section;
+import edu.mum.se.poseidon.core.repositories.models.StudentSection;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,9 +16,8 @@ public class Student extends User {
     @ManyToOne
     @JoinColumn(name = "entry_id", nullable = true)
     private Entry entry;
-    @ManyToMany
-    @JoinTable(name = "sections_students")
-    private List<Section> sectionList;
+    @OneToMany(mappedBy = "id.student")
+    private List<StudentSection> studentSections;
 
     public String getStudentId() {
         return studentId;
@@ -27,11 +27,19 @@ public class Student extends User {
         this.studentId = studentId;
     }
 
-    public List<Section> getSectionList() {
-        return sectionList;
+    public Entry getEntry() {
+        return entry;
     }
 
-    public void setSectionList(List<Section> sectionList) {
-        this.sectionList = sectionList;
+    public void setEntry(Entry entry) {
+        this.entry = entry;
+    }
+
+    public List<StudentSection> getStudentSections() {
+        return studentSections;
+    }
+
+    public void setStudentSections(List<StudentSection> studentSections) {
+        this.studentSections = studentSections;
     }
 }

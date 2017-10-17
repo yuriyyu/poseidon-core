@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class AdminSectionController {
 
     private SectionService sectionService;
-    private static final Logger log = LoggerFactory.getLogger(AdminSectionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdminSectionController.class);
     private SectionMapper sectionMapper;
 
     @Autowired
@@ -36,7 +36,7 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections/delete/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteSection(@PathVariable(name = "id") long id) {
-        log.debug("'Delete section' request is received. Section ID=" + id);
+        logger.debug("'Delete section' request is received. Section ID=" + id);
         try {
             sectionService.deleteSection(id);
             return new ResponseEntity(new SectionDto(), HttpStatus.OK);
@@ -52,7 +52,7 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getSection(@PathVariable long id) {
-        log.debug("'Get section' request is received. section ID=" + id);
+        logger.debug("'Get section' request is received. section ID=" + id);
         try {
             SectionDto sectionDto = sectionMapper.getSectionDtoFrom(sectionService.getSection(id));
             return new ResponseEntity<>(sectionDto, HttpStatus.OK);
@@ -65,7 +65,7 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editSection(@RequestBody SectionDto sectionDto) {
-        log.debug("'Edit section' request is received. section ID=" + sectionDto.getId());
+        logger.debug("'Edit section' request is received. section ID=" + sectionDto.getId());
         try {
             Section section = sectionMapper.getSectionFrom(sectionDto);
             SectionDto sectionDto1 = sectionMapper.getSectionDtoFrom(sectionService.editSection(section));
