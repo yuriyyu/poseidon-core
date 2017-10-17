@@ -1,7 +1,5 @@
 package edu.mum.se.poseidon.core.controllers.dto;
 
-import java.time.LocalDate;
-
 public class EntryDto {
 
     private Long id;

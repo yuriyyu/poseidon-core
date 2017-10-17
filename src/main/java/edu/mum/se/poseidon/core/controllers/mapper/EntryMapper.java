@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 public class EntryMapper {
 
     public EntryDto getEntryDtoFrom(Entry entry) {
+        if (entry == null) {
+            return null;
+        }
         EntryDto entryDto = new EntryDto();
         entryDto.setId(entry.getId());
         entryDto.setnFppOpt(entry.getnFppOpt());
@@ -22,6 +25,9 @@ public class EntryMapper {
     }
 
     public Entry getEntryFrom(EntryDto entryDto) {
+        if (entryDto == null) {
+            return null;
+        }
         Entry entry = new Entry();
         entry.setId(entryDto.getId());
         entry.setnFppOpt(entryDto.getnFppOpt());
