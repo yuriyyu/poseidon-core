@@ -63,7 +63,7 @@ public class Course
         return sections;
     }
 
-    public void setSectionList(List<Section> sections) {
+    public void setSections(List<Section> sections) {
         this.sections = sections;
     }
     
