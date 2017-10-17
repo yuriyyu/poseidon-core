@@ -16,8 +16,10 @@ public class Section
     private String location;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Block block;
 
+    @ManyToOne
+    @JoinColumn(name = "BLOCK_ID", nullable = false)
+    private Block block;
     @ManyToOne
     @JoinColumn(name = "FACULTY_ID", nullable = false)
     private Faculty faculty;

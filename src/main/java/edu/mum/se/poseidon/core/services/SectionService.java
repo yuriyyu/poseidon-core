@@ -33,11 +33,14 @@ public class SectionService {
     }
 
     public Section editSection(Section section) throws PoseidonException {
-        if (sectionRepository.exists(section.getId())) {
-            sectionRepository.save(section);
-            return section;
-        } else {
+        Section section1 = sectionRepository.getOne(section.getId());
+        if (section1 == null) {
             throw new PoseidonException("Section is not found with this id.");
+        } else {
+            section1.setLocation(section.getLocation());
+            section1.setMaxSeats(section.getMaxSeats());
+            sectionRepository.save(section1);
+            return section1;
         }
     }
 
