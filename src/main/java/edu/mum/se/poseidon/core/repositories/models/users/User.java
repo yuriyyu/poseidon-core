@@ -16,16 +16,6 @@ import javax.persistence.*;
 public class User
         extends AbstractEntity {
 
-	private long id;
-	
-    public Long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	private String firstName;
 
     private String lastName;

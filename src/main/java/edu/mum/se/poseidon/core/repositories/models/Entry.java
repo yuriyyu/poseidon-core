@@ -3,8 +3,11 @@ package edu.mum.se.poseidon.core.repositories.models;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 
 import javax.persistence.*;
+
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Created by Yuriy Yugay on 10/10/2017.
@@ -16,6 +19,7 @@ import java.util.List;
 public class Entry
         extends AbstractEntity {
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
     private Integer nFppStudents;
     private Integer nMppStudents;
@@ -24,15 +28,17 @@ public class Entry
     private Integer usRes;
     private String name;
 
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry")
     private List<Block> blockList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry")
     private List<Student> studentList;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     private Schedule schedule;
-
+    */
+    
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -88,7 +94,7 @@ public class Entry
     public void setName(String name) {
         this.name = name;
     }
-
+    /*
     public List<Block> getBlockList() {
         return blockList;
     }
@@ -96,12 +102,13 @@ public class Entry
     public void setBlockList(List<Block> blockList) {
         this.blockList = blockList;
     }
-
+	
+    
     public List<Student> getStudentList() {
         return studentList;
     }
 
     public void setStudentList(List<Student> studentList) {
         this.studentList = studentList;
-    }
+    }*/
 }

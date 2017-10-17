@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import edu.mum.se.poseidon.core.controllers.dto.BlockDto;
 import edu.mum.se.poseidon.core.repositories.models.Block;
+import edu.mum.se.poseidon.core.repositories.models.Entry;
 
 @Component
 public class BlockMapper {
