@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.mum.se.poseidon.core.controllers.dto.BlockDto;
+import edu.mum.se.poseidon.core.controllers.mapper.EntryMapper;
 import edu.mum.se.poseidon.core.repositories.BlockRepository;
 import edu.mum.se.poseidon.core.repositories.models.Block;
 
@@ -14,15 +15,17 @@ import edu.mum.se.poseidon.core.repositories.models.Block;
 public class BlockService {
 
 	private BlockRepository blockRepository;
+	private EntryMapper entryMapper;
 	
 	@Autowired
-	public BlockService(BlockRepository blockRepository) {
+	public BlockService(BlockRepository blockRepository, EntryMapper entryMapper) {
 		this.blockRepository = blockRepository;
+		this.entryMapper = entryMapper;
 	}
 	
 	public Block createBlock(BlockDto blockDto) {
 		Block block = new Block();
-		block.setEntry(blockDto.getEntry());
+		block.setEntry(entryMapper.getEntryFrom(blockDto.getEntryDto()));
 		block.setName(blockDto.getName());
 		block.setStartDate(LocalDate.parse(blockDto.getStartDate()));
 		block.setEndDate(LocalDate.parse(blockDto.getEndDate()));
@@ -32,7 +35,7 @@ public class BlockService {
 	
 	public Block editBlock(BlockDto blockDto) {
 		Block block = blockRepository.findOne(blockDto.getId());
-		block.setEntry(blockDto.getEntry());
+		block.setEntry(entryMapper.getEntryFrom(blockDto.getEntryDto()));
 		block.setName(blockDto.getName());
 		block.setStartDate(LocalDate.parse(blockDto.getStartDate()));
 		block.setEndDate(LocalDate.parse(blockDto.getEndDate()));
