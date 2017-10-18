@@ -15,4 +15,12 @@ public class PrerequisiteMapper {
 		dto.setNumber(course.getNumber());
 		return dto;
 	}
+	
+	public Course getCourse(PrerequisiteDto dto) {
+		Course course = new Course();
+		course.setId(dto.getId());
+		course.setName(dto.getName());
+		course.setNumber(dto.getNumber());
+		return course;
+	}
 }

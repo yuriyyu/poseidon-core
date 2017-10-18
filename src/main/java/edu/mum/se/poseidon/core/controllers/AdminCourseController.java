@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,6 +29,27 @@ public class AdminCourseController {
 		this.courseMapper = courseMapper;
 	}
 	
+	@RequestMapping(path="/courses/create", method = RequestMethod.POST)
+	public ResponseEntity<?> create(@RequestBody CourseDto courseDto) {
+		Course course = courseService.createCourse(courseDto);
+		CourseDto dto = courseMapper.getCourseDto(course);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/courses/edit", method = RequestMethod.POST)
+	public ResponseEntity<?> edit(@RequestBody CourseDto courseDto) {
+		Course course = this.courseService.editCourse(courseDto);
+		CourseDto dto = courseMapper.getCourseDto(course);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/courses/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getCourse(@PathVariable long id){
+		Course course = courseService.getCourse(id);
+		CourseDto dto = courseMapper.getCourseDto(course);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
 	@RequestMapping(path="/courses", method = RequestMethod.GET)
 	public ResponseEntity<?> getCourseList(){
 		List<Course> courses = courseService.getCourseList();
@@ -34,5 +57,11 @@ public class AdminCourseController {
 				.map(c -> courseMapper.getCourseDto(c))
 				.collect(Collectors.toList());
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/courses/{id}/delete", method = RequestMethod.GET)
+	public ResponseEntity<?> deleteCourse(@PathVariable long id){
+		courseService.deleteCourse(id);
+		return new ResponseEntity<>(new CourseDto(), HttpStatus.OK);
 	}
 }

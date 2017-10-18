@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.mum.se.poseidon.core.controllers.dto.FacultyDto;
 import edu.mum.se.poseidon.core.controllers.mapper.FacultyMapper;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.services.FacultyService;
@@ -32,8 +31,8 @@ public class FacultyController {
 	@RequestMapping(path="/faculties", method = RequestMethod.GET)
 	public ResponseEntity<?> getFacultyList(){
 		List<Faculty> faculties = facultyService.getFacultyList();
-		List<FacultyDto> dtos = faculties.stream()
-				.map(b -> facultyMapper.getFacultyDto(b))
+		List<FacultyProfileDto> dtos = faculties.stream()
+				.map(f -> facultyMapper.getFacultyProfileDtoFrom(f))
 				.collect(Collectors.toList());
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}

@@ -20,11 +20,11 @@ public class Course
     private String name;
     private Integer number;
     
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = false)
     @JoinColumn(name = "COURSE_ID")
     private List<Course> prerequisites = new ArrayList<>();
     
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = false)
     @JoinColumn(name = "FACULTY_ID")
     private List<Faculty> faculties = new ArrayList<>();
     

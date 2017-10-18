@@ -3,8 +3,6 @@ package edu.mum.se.poseidon.core.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +22,7 @@ public class AdminBlockController {
 
 	private BlockService blockService;
 	private BlockMapper blockMapper;
-	private static final Logger log = LoggerFactory.getLogger(AdminUserController.class);
-	
+
 	@Autowired
 	public AdminBlockController(BlockService blockService, BlockMapper blockMapper) {
 		this.blockService = blockService;
@@ -40,8 +37,8 @@ public class AdminBlockController {
 	}
 	
 	@RequestMapping(path="/blocks/edit", method = RequestMethod.POST)
-	public ResponseEntity<?> edit(@RequestBody BlockDto userDto) {
-		Block block = this.blockService.editBlock(userDto);
+	public ResponseEntity<?> edit(@RequestBody BlockDto blockDto) {
+		Block block = this.blockService.editBlock(blockDto);
 		BlockDto bdo = blockMapper.getBlockDto(block);
 		return new ResponseEntity<>(bdo, HttpStatus.OK);
 	}
@@ -63,7 +60,7 @@ public class AdminBlockController {
 	}
 	
 	@RequestMapping(path="/blocks/{id}/delete", method = RequestMethod.GET)
-	public ResponseEntity<?> deleteUser(@PathVariable long id){
+	public ResponseEntity<?> deleteBlock(@PathVariable long id){
 		blockService.deleteBlock(id);
 		return new ResponseEntity<>(new BlockDto(), HttpStatus.OK);
 	}

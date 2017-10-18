@@ -10,7 +10,7 @@ public class CourseDto {
     private Integer number;
     
     private List<PrerequisiteDto> prerequisites = new ArrayList<>();
-    private List<FacultyDto> faculties = new ArrayList<>();
+    private List<FacultyProfileDto> faculties = new ArrayList<>();
     
     public Long getId() {
     	return id;
@@ -48,15 +48,15 @@ public class CourseDto {
     	prerequisites.add(prerequisite);
     }
 
-    public List<FacultyDto> getFaculties(){
+    public List<FacultyProfileDto> getFaculties(){
     	return faculties;
     }
     
-    public void setFaculties(List<FacultyDto> faculties) {
+    public void setFaculties(List<FacultyProfileDto> faculties) {
     	this.faculties = faculties;
     }
     
-    public void addFaculty(FacultyDto faculty) {
+    public void addFaculty(FacultyProfileDto faculty) {
     	faculties.add(faculty);
     }
 }
