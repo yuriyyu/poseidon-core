@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,11 @@ public class AdminSectionController {
     public ResponseEntity<?> deleteSection(@PathVariable(name = "id") long id) {
         logger.debug("'Delete section' request is received. Section ID=" + id);
         try {
+            Section section = sectionService.getSection(id);
+            if (section != null && section.getStartDate().isBefore(LocalDate.now())) {
+                FailResponseWrapper failResponse = new FailResponseWrapper("Section is already started.");
+                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            }
             sectionService.deleteSection(id);
             return new ResponseEntity(new SectionDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
@@ -68,6 +74,10 @@ public class AdminSectionController {
         logger.debug("'Edit section' request is received. section ID=" + sectionDto.getId());
         try {
             Section section = sectionMapper.getSectionFrom(sectionDto);
+            if (section != null && section.getStartDate().isBefore(LocalDate.now())) {
+                FailResponseWrapper failResponse = new FailResponseWrapper("Section is already started.");
+                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            }
             SectionDto sectionDto1 = sectionMapper.getSectionDtoFrom(sectionService.editSection(section));
             return new ResponseEntity<>(sectionDto1, HttpStatus.OK);
         } catch (PoseidonException pe) {

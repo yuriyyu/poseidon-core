@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,14 @@ public class AdminEntryController {
         log.debug("'Create entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
+            if (entryService.getEntryByStartDate(entry.getStartDate()) != null) {
+                FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already exist with that date.");
+                return new ResponseEntity(failResponse, HttpStatus.CONFLICT);
+            }
+            int totalNumber = calculateBlockNumber(entry);
+            // TODO
+            // blockService.createBlock()
+            // entry.setBlockList(null);
             EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.createEntry(entry));
             return new ResponseEntity(entryDto1, HttpStatus.OK);
         } catch (PoseidonException pe) {
@@ -59,6 +68,12 @@ public class AdminEntryController {
     public ResponseEntity<?> deleteEntry(@PathVariable(name = "id") long id) {
         log.debug("'Delete entry' request is received. Entry ID=" + id);
         try {
+            Entry entry = entryService.getEntry(id);
+            if (entry != null && entry.getStartDate().isBefore(LocalDate.now())) {
+                FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already started.");
+                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            }
+            entry.getBlockList().stream().forEach(b -> blockService.deleteBlock(b.getId()));
             entryService.deleteEntry(id);
             return new ResponseEntity(new EntryDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
@@ -89,6 +104,15 @@ public class AdminEntryController {
         log.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
+            if (entry != null && entry.getStartDate().isBefore(LocalDate.now())) {
+                FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already started.");
+                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            }
+            int totalNumber = calculateBlockNumber(entry);
+            entry.getBlockList().stream().forEach(b -> blockService.deleteBlock(b.getId()));
+            // TODO create blocks
+            // blockService.createBlock();
+            // entry.setBlockList();
             EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.editEntry(entry));
             return new ResponseEntity<>(entryDto1, HttpStatus.OK);
         } catch (PoseidonException pe) {
