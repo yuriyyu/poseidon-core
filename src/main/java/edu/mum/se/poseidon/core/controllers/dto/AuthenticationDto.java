@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class AuthenticationDto {
+	private Long id;
+
 	@NotNull
 	@NotEmpty
 	private String username;
@@ -18,7 +20,15 @@ public class AuthenticationDto {
 	@NotNull
 	private List<String> roles;
 
-	public String getUsername() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
 		return username;
 	}
 
