@@ -1,13 +1,9 @@
 package edu.mum.se.poseidon.core.controllers;
 
-import com.sun.prism.impl.ResourcePool;
-import edu.mum.se.poseidon.core.controllers.dto.AuthenticationDto;
 import edu.mum.se.poseidon.core.controllers.dto.ScheduleDto;
 import edu.mum.se.poseidon.core.controllers.dto.ScheduleGenerateDto;
-import edu.mum.se.poseidon.core.controllers.dto.UserDto;
 import edu.mum.se.poseidon.core.controllers.mapper.ScheduleMapper;
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
-import edu.mum.se.poseidon.core.repositories.models.users.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +41,13 @@ public class AdminScheduleController {
                 .map(x -> scheduleMapper.getScheduleDto(x))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/schedules/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSchedule(@PathVariable long id){
+        Schedule s = scheduleService.getScheduleById(id);
+        ScheduleDto dto = scheduleMapper.getScheduleDto(s);
+        return  new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/schedules/{id}", method = RequestMethod.DELETE)
