@@ -1,25 +1,25 @@
 package edu.mum.se.poseidon.core.controllers.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseDto {
 
 	private Long id;
 	private String name;
-	private Integer number;
+    private Integer number;
     
-    private List<CourseDto> prerequisites;
-    private List<FacultyDto> faculties;
-    private List<SectionDto> sections;
+    private List<PrerequisiteDto> prerequisites = new ArrayList<>();
+    private List<FacultyDto> faculties = new ArrayList<>();
     
     public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
+    	return id;
+    }
+    
+    public void setId(Long id) {
+    	this.id = id;
+    }
+    
     public String getName() {
         return name;
     }
@@ -36,26 +36,18 @@ public class CourseDto {
         this.number = number;
     }
 
-    public List<CourseDto> getPrerequisites() {
+    public List<PrerequisiteDto> getPrerequisites() {
         return prerequisites;
     }
 
-    public void setPrerequisites(List<CourseDto> prerequisites) {
+    public void setPrerequisites(List<PrerequisiteDto> prerequisites) {
         this.prerequisites = prerequisites;
     }
     
-    public void addPrerequisite(CourseDto prerequisite) {
+    public void addPrerequisite(PrerequisiteDto prerequisite) {
     	prerequisites.add(prerequisite);
     }
 
-    public List<SectionDto> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<SectionDto> sections) {
-        this.sections = sections;
-    }
-    
     public List<FacultyDto> getFaculties(){
     	return faculties;
     }

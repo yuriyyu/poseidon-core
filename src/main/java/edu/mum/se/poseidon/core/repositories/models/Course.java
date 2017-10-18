@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,15 +22,15 @@ public class Course
     
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "COURSE_ID")
-    private List<Course> prerequisites;
+    private List<Course> prerequisites = new ArrayList<>();
     
     @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "COURSE_ID")
-    private List<Faculty> faculties;
+    @JoinColumn(name = "FACULTY_ID")
+    private List<Faculty> faculties = new ArrayList<>();
     
     @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "COURSE_ID")
-    private List<Section> sections;
+    @JoinColumn(name = "SECTION_ID")
+    private List<Section> sections = new ArrayList<>();
     
     public String getName() {
         return name;
