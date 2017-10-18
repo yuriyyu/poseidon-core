@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,7 +37,7 @@ public class StudentController {
     }
 
     @RequestMapping(path = "/students/{id}", method = RequestMethod.POST)
-    public ResponseEntity<?> updateProfile(@PathVariable long id, StudentProfileDto studentProfileDto)
+    public ResponseEntity<?> updateProfile(@PathVariable long id, @RequestBody StudentProfileDto studentProfileDto)
             throws Exception {
 	    Student student = studentService.updateProfile(id, studentProfileDto);
 	    StudentProfileDto dto = studentToDtoMapper.getStudentDtoFrom(student);

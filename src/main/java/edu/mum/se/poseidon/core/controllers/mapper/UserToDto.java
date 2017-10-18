@@ -23,6 +23,7 @@ public class UserToDto {
 			return null;
 
 		AuthenticationDto dto = new AuthenticationDto();
+		dto.setId(user.getId());
 		dto.setUsername(user.getUsername());
 		dto.setPassword(user.getPassword());
 		dto.setRoles(getRole(user.getClass()));
