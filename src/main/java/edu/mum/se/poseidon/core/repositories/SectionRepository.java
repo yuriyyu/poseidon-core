@@ -9,8 +9,11 @@ import java.util.List;
 
 public interface SectionRepository extends JpaRepository<Section, Long> {
 
-//    @Query("select s from Section s left join s.studentList ss where ss.studentId = :studentId")
-//    List<Section> findSectionsByStudentId(@Param("studentId") Long studentId);
+    @Query("select s from Section s join fetch s.studentSections ss where ss.id.student.id = :studentId and ss.isPassed = true")
+    List<Section> findSectionsPassedByStudentId(@Param("studentId") Long studentId);
+
+    @Query("select s from Section s join fetch s.studentSections ss where ss.id.student.id = :studentId")
+    List<Section> findSectionsByStudentId(@Param("studentId") Long studentId);
 
     List<Section> findSectionsByDeleted(Boolean deleted);
 

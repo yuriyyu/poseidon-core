@@ -104,7 +104,6 @@ public class Entry
         this.blockList = blockList;
     }
 
-
     public List<Student> getStudentList() {
         return studentList;
     }
