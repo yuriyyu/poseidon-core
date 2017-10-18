@@ -1,8 +1,8 @@
 package edu.mum.se.poseidon.core.controllers;
 
 
-import edu.mum.se.poseidon.core.controllers.dto.StudentDto;
-import edu.mum.se.poseidon.core.controllers.mapper.StudentToDto;
+import edu.mum.se.poseidon.core.controllers.dto.StudentProfileDto;
+import edu.mum.se.poseidon.core.controllers.mapper.StudentToDtoMapper;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,19 +18,29 @@ import edu.mum.se.poseidon.core.services.StudentService;
 public class StudentController {
 
 	private StudentService studentService;
-	private StudentToDto studentToDto;
+	private StudentToDtoMapper studentToDtoMapper;
 	
 	@Autowired
-	public StudentController(StudentService studentService, StudentToDto studentToDto){
+	public StudentController(StudentService studentService, StudentToDtoMapper studentToDtoMapper){
 		this.studentService = studentService;
-		this.studentToDto = studentToDto;
+		this.studentToDtoMapper = studentToDtoMapper;
 	}
 	
 	@RequestMapping(path = "/students/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getStudent(@PathVariable(name = "id") long id) {
+	public ResponseEntity<?> getStudentProfile(@PathVariable(name = "id") long id)
+            throws Exception {
         Student student = studentService.getStudent(id);
-        StudentDto dto = studentToDto.getStudentDtoFrom(student);
+        StudentProfileDto dto = studentToDtoMapper.getStudentDtoFrom(student);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/students/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> updateProfile(@PathVariable long id, StudentProfileDto studentProfileDto)
+            throws Exception {
+	    Student student = studentService.updateProfile(id, studentProfileDto);
+	    StudentProfileDto dto = studentToDtoMapper.getStudentDtoFrom(student);
+
+	    return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

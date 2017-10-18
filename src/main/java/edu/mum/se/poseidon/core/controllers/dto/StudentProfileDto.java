@@ -1,20 +1,11 @@
 package edu.mum.se.poseidon.core.controllers.dto;
 
-public class StudentDto {
+public class StudentProfileDto {
 
-    private long id;
     private String firstName;
     private String lastName;
     private String username;
     private String password;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;

@@ -1,5 +1,6 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
+import edu.mum.se.poseidon.core.controllers.dto.FacultyProfileDto;
 import org.springframework.stereotype.Component;
 
 import edu.mum.se.poseidon.core.controllers.dto.FacultyDto;
@@ -14,5 +15,19 @@ public class FacultyMapper {
 		facultyDto.setFirstName(faculty.getFirstName());
 		facultyDto.setLastName(faculty.getLastName());
 		return facultyDto;
+	}
+
+	public FacultyProfileDto getFacultyProfileDtoFrom(Faculty faculty) {
+		if(faculty == null) {
+			return null;
+		}
+
+		FacultyProfileDto dto = new FacultyProfileDto();
+		dto.setFirstName(faculty.getFirstName());
+		dto.setLastName(faculty.getLastName());
+		dto.setUsername(faculty.getUsername());
+		dto.setPassword(faculty.getPassword());
+
+		return dto;
 	}
 }

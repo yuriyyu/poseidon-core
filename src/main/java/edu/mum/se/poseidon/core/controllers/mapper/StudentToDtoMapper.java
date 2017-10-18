@@ -1,23 +1,22 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
-import edu.mum.se.poseidon.core.controllers.dto.StudentDto;
+import edu.mum.se.poseidon.core.controllers.dto.StudentProfileDto;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StudentToDto {
+public class StudentToDtoMapper {
 
-    public StudentToDto() {
+    public StudentToDtoMapper() {
 
     }
 
-    public StudentDto getStudentDtoFrom(Student student) {
+    public StudentProfileDto getStudentDtoFrom(Student student) {
         if(student == null)  {
             return null;
         }
 
-        StudentDto dto = new StudentDto();
-        dto.setId(student.getId());
+        StudentProfileDto dto = new StudentProfileDto();
         dto.setFirstName(student.getFirstName());
         dto.setLastName(student.getLastName());
         dto.setUsername(student.getUsername());
