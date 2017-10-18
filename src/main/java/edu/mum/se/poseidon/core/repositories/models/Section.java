@@ -20,11 +20,16 @@ public class Section
     @ManyToOne
     @JoinColumn(name = "BLOCK_ID", nullable = false)
     private Block block;
+
     @ManyToOne
     @JoinColumn(name = "FACULTY_ID", nullable = false)
     private Faculty faculty;
+
     @OneToMany(mappedBy = "id.section")
     private List<StudentSection> studentSections;
+
+    @ManyToOne
+    private Schedule schedule;
 
     public Integer getMaxSeats() {
         return maxSeats;
@@ -81,4 +86,13 @@ public class Section
     public void setStudentSections(List<StudentSection> studentSections) {
         this.studentSections = studentSections;
     }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
 }
