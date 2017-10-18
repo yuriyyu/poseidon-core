@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class AdminScheduleController {
 
@@ -37,7 +40,10 @@ public class AdminScheduleController {
 
     @RequestMapping(path = "/schedules", method = RequestMethod.GET)
     public ResponseEntity<?> getSchedules() {
-        ScheduleDto dto = new ScheduleDto();
+        List<Schedule> schedules = scheduleService.getSchedules();
+        List<ScheduleDto> dto = schedules.stream()
+                .map(x -> scheduleMapper.getScheduleDto(x))
+                .collect(Collectors.toList());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -56,7 +62,7 @@ public class AdminScheduleController {
     }
 
     @RequestMapping(path = "/schedules/edit", method = RequestMethod.POST)
-    public ResponseEntity<?> edit(@RequestBody ScheduleDto scheduleDto){
+    public ResponseEntity<?> edit(@RequestBody ScheduleDto scheduleDto) {
         Schedule schedule = this.scheduleService.editSchedule(scheduleDto);
         ScheduleDto dto = scheduleMapper.getScheduleDto(schedule);
         return new ResponseEntity<>(dto, HttpStatus.OK);
