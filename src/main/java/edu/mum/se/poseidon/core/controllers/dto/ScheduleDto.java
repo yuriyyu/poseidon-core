@@ -8,7 +8,7 @@ public class ScheduleDto {
     private Long id;
     private String name;
     private int status;
-    private List<Section> sections;
+    private List<SectionDto> sections;
 
     public String getName() {
         return name;
@@ -34,11 +34,11 @@ public class ScheduleDto {
         this.id = id;
     }
 
-    public List<Section> getSections() {
+    public List<SectionDto> getSections() {
         return sections;
     }
 
-    public void setSections(List<Section> sections) {
+    public void setSections(List<SectionDto> sections) {
         this.sections = sections;
     }
 }

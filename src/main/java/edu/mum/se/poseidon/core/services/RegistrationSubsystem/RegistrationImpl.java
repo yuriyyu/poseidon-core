@@ -17,18 +17,13 @@ public class RegistrationImpl implements IRegistration {
     private StudentRepository studentRepository;
     private SectionRepository sectionRepository;
     private CourseRepository courseRepository;
-    private BlockRepository blockRepository;
-    private EntryRepository entryRepository;
 
     @Autowired
     public RegistrationImpl(StudentRepository studentRepository, SectionRepository sectionRepository,
-                            CourseRepository courseRepository, BlockRepository blockRepository,
-                            EntryRepository entryRepository) {
+                            CourseRepository courseRepository) {
         this.studentRepository = studentRepository;
         this.sectionRepository = sectionRepository;
         this.courseRepository = courseRepository;
-        this.blockRepository = blockRepository;
-        this.entryRepository = entryRepository;
     }
 
     @Override
@@ -53,50 +48,22 @@ public class RegistrationImpl implements IRegistration {
 
     @Override
     public List<Section> getAvailableSections(Long studentId) throws PoseidonException {
-        final String nameOfCourseFPP = "FPP";
-        final String nameOfCourseMPP = "MPP";
-        final Long numberOfCourseFPPAndMPP = 2L;
         List<Section> retVal = new ArrayList<>();
-        // Student must be completed MPP course
-        List<Section> sectionsPassedByStudent = sectionRepository.findSectionsPassedByStudentId(studentId);
-        Long totalNumber = sectionsPassedByStudent.stream()
-                .map(s -> courseRepository.findCourseBySectionId(s.getId()))
-                .filter(c -> c.getName().equals(nameOfCourseFPP))
-                .filter(c -> c.getName().equals(nameOfCourseMPP))
-                .count();
-        if (!totalNumber.equals(numberOfCourseFPPAndMPP)) {
-            throw new PoseidonException("Student must be completed 'MPP' course.");
-        }
-        // Finding student's entry
-        Student student = studentRepository.findOne(studentId);
-        Entry studentEntry = entryRepository.findEntriesByDeleted(false)
-                .stream()
-                .filter(e -> e.getStudentList().contains(student))
-                .findFirst().get();
-        // Finding student's elective blocks
-        List<Block> studentBlockList = blockRepository.findAll()
-                .stream()
-                .filter(b -> !b.getDeleted())
-                .filter(b -> b.getEntry() == studentEntry)
-                .collect(Collectors.toList());
         // Finding student's all section
-        List<Section> availableSectionList = sectionRepository.findAll()
-                .stream()
-                .filter(s -> !s.getDeleted())
-                .filter(s -> studentBlockList.contains(s.getBlock()))
-                .collect(Collectors.toList());
+        List<Section> sectionList = sectionRepository.findSectionsByDeleted(false);
+        List<Section> studentPassedSectionList = sectionRepository.findSectionsPassedByStudentId(studentId);
         // checks that student passed course's pre-requisite
         // add sections that has no pre-requisites
-        retVal.addAll(availableSectionList.stream()
+        retVal.addAll(sectionList.stream()
                 .filter(s -> courseRepository.findCourseBySectionId(s.getId()).getPrerequisites() == null
                         && courseRepository.findCourseBySectionId(s.getId()).getPrerequisites().isEmpty())
                 .collect(Collectors.toList()));
         // add sections that has pre-requisites
-        for (Section section : availableSectionList) {
+        for (Section section : sectionList) {
             Course course = courseRepository.findCourseBySectionId(section.getId());
             List<Course> prerequisiteList = course.getPrerequisites();
             int count = 0;
-            for (Section studentSection : sectionsPassedByStudent) {
+            for (Section studentSection : studentPassedSectionList) {
                 Course studentCourse = courseRepository.findCourseBySectionId(studentSection.getId());
                 if (prerequisiteList.contains(studentCourse)) {
                     count++;
@@ -112,5 +79,9 @@ public class RegistrationImpl implements IRegistration {
     @Override
     public List<Section> getRegisteredSectionByStudent(Long studentId) {
         return sectionRepository.findSectionsByStudentId(studentId);
+    }
+
+    public List<Section> getSectionForRegister() {
+        return null;
     }
 }

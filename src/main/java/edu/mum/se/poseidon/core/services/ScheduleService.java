@@ -2,6 +2,7 @@ package edu.mum.se.poseidon.core.services;
 
 import edu.mum.se.poseidon.core.controllers.dto.ScheduleDto;
 import edu.mum.se.poseidon.core.controllers.dto.ScheduleGenerateDto;
+import edu.mum.se.poseidon.core.controllers.mapper.SectionMapper;
 import edu.mum.se.poseidon.core.repositories.*;
 import edu.mum.se.poseidon.core.repositories.models.Block;
 import edu.mum.se.poseidon.core.repositories.models.Course;
@@ -24,6 +25,7 @@ public class ScheduleService {
     private FacultyRepository facultyRepository;
     private SectionRepository sectionRepository;
     private BlockRepository blockRepository;
+    private SectionMapper sectionMapper;
 
     @Autowired
     public ScheduleService(
@@ -32,16 +34,18 @@ public class ScheduleService {
             CourseRepository courseRepository,
             FacultyRepository facultyRepository,
             SectionRepository sectionRepository,
-            BlockRepository blockRepository) {
+            BlockRepository blockRepository,
+            SectionMapper sectionMapper) {
         this.scheduleRepository = scheduleRepository;
         this.entryRepository = entryRepository;
         this.courseRepository = courseRepository;
         this.facultyRepository = facultyRepository;
         this.sectionRepository = sectionRepository;
         this.blockRepository = blockRepository;
+        this.sectionMapper = sectionMapper;
     }
 
-    public Schedule getSchedule(long entryId) {
+    public Schedule getScheduleByEntryId(long entryId) {
         Entry entry = entryRepository.findOne(entryId);
         if (entry == null) {
             throw new RuntimeException("Entry not found");
@@ -49,9 +53,13 @@ public class ScheduleService {
         return scheduleRepository.findByEntry(entry);
     }
 
-    public List<Schedule> getSchedules() {
+    public Schedule getScheduleById(long scheduleId){
+        return scheduleRepository.findOne(scheduleId);
+    }
 
-        return scheduleRepository.findAll().stream().filter(x -> !x.getDeleted()).collect(Collectors.toList());
+    public List<Schedule> getSchedules() {
+        return  scheduleRepository.findAllByDeleted(false);
+        //return scheduleRepository.findAll().stream().filter(x -> !x.getDeleted()).collect(Collectors.toList());
     }
 
     public void deleteSchedule(long scheduleId) {
@@ -66,7 +74,10 @@ public class ScheduleService {
         schedule.setDcreated(now());
         schedule.setName(dto.getName());
         schedule.setStatus(dto.getStatus());
-        schedule.setSections(dto.getSections());
+        schedule.setSections(dto.getSections()
+                .stream()
+                .map(x -> sectionMapper.getSectionFrom(x))
+                .collect(Collectors.toList()));
 
         createSchedule(schedule);
         return schedule;
