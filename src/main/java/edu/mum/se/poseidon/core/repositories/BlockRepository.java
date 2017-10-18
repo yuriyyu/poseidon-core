@@ -10,5 +10,5 @@ import edu.mum.se.poseidon.core.repositories.models.Block;
 public interface BlockRepository extends JpaRepository<Block, Long> {
 
 	List<Block> findAllByDeleted(boolean is_deleted);
-	
+	List<Block> findAllByEntryAndDeleted(Entry entry, boolean isDeleted);
 }
