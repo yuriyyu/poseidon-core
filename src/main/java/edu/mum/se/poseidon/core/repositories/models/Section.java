@@ -31,6 +31,18 @@ public class Section
     @ManyToOne
     private Schedule schedule;
 
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
     public Integer getMaxSeats() {
         return maxSeats;
     }

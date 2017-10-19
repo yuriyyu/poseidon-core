@@ -2,6 +2,7 @@ package edu.mum.se.poseidon.core.repositories;
 
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
 import edu.mum.se.poseidon.core.repositories.models.Section;
+import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     List<Section> findSectionsByDeleted(Boolean deleted);
 
     List<Section> findBySchedule(Schedule schedule);
+
+    List<Section> findByFaculty(Faculty faculty);
 }

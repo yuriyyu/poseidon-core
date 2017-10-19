@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class StudentRegistrationController {
@@ -35,10 +34,7 @@ public class StudentRegistrationController {
     public ResponseEntity<?> getAvailableSections(@PathVariable(name = "studentId") long studentId) {
         try {
             List<Section> sectionList = registrationImpl.getAvailableSections(studentId);
-            List<SectionDto> sectionDtoList = sectionList
-                    .stream()
-                    .map(s -> sectionMapper.getSectionDtoFrom(s))
-                    .collect(Collectors.toList());
+            List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity(sectionDtoList, HttpStatus.OK);
         } catch (PoseidonException pe) {
             FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
@@ -54,10 +50,7 @@ public class StudentRegistrationController {
     public ResponseEntity<?> getRegisteredSectionByStudent(@PathVariable(name = "studentId") long studentId) {
         try {
             List<Section> sectionList = registrationImpl.getRegisteredSectionByStudent(studentId);
-            List<SectionDto> sectionDtoList = sectionList
-                    .stream()
-                    .map(s -> sectionMapper.getSectionDtoFrom(s))
-                    .collect(Collectors.toList());
+            List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity(sectionDtoList, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");

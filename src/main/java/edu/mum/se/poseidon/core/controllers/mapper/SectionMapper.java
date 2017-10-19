@@ -1,9 +1,14 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
 import edu.mum.se.poseidon.core.configs.Helper;
+import edu.mum.se.poseidon.core.controllers.dto.FacultySectionDto;
 import edu.mum.se.poseidon.core.controllers.dto.SectionDto;
+import edu.mum.se.poseidon.core.controllers.dto.StudentSectionDto;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SectionMapper {
@@ -33,5 +38,85 @@ public class SectionMapper {
         sectionDto.setLocation(section.getLocation());
         sectionDto.setMaxSeats(section.getMaxSeats());
         return sectionDto;
+    }
+
+    public List<StudentSectionDto> getStudentSectionDtoList(List<Section> sectionList) {
+        if(sectionList == null) {
+            return null;
+        }
+
+        return sectionList.stream()
+                .map(s -> getStudentSectionDto(s))
+                .filter(dto -> dto != null)
+                .collect(Collectors.toList());
+    }
+
+    public StudentSectionDto getStudentSectionDto(Section section) {
+        if(section == null) {
+            return null;
+        }
+
+        StudentSectionDto dto = new StudentSectionDto();
+        dto.setBlockName(section.getBlock().getName());
+        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setFacultyFirstName(section.getFaculty().getFirstName());
+        dto.setFacultyLastName(section.getFaculty().getLastName());
+        dto.setId(section.getId());
+        dto.setLocation(section.getLocation());
+        dto.setMaxSeats(section.getMaxSeats());
+        dto.setCourseName(section.getCourse().getName());
+        dto.setCourseNumber(section.getCourse().getNumber());
+
+        return dto;
+    }
+
+    public List<Section> getSectionListFrom(List<SectionDto> sectionDtoList) {
+        if (sectionDtoList == null || sectionDtoList.isEmpty()) {
+            return null;
+        }
+        return sectionDtoList
+                .stream()
+                .map(s -> getSectionFrom(s))
+                .collect(Collectors.toList());
+    }
+
+    public List<SectionDto> getSectionDtoListFrom(List<Section> sectionList) {
+        if (sectionList == null || sectionList.isEmpty()) {
+            return null;
+        }
+        return sectionList
+                .stream()
+                .map(s -> getSectionDtoFrom(s))
+                .collect(Collectors.toList());
+    }
+
+    public List<FacultySectionDto> getFacultySectionDtoList(List<Section> sectionList) {
+        if(sectionList == null) {
+            return null;
+        }
+
+        return sectionList.stream()
+                .map(s -> getFacultySectionDto(s))
+                .filter(dto -> dto != null)
+                .collect(Collectors.toList());
+    }
+
+    public FacultySectionDto getFacultySectionDto(Section section) {
+        if(section == null) {
+            return null;
+        }
+
+        FacultySectionDto dto = new FacultySectionDto();
+        dto.setBlockName(section.getBlock().getName());
+        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setId(section.getId());
+        dto.setLocation(section.getLocation());
+        dto.setMaxSeats(section.getMaxSeats());
+        dto.setCourseName(section.getCourse().getName());
+        dto.setCourseNumber(section.getCourse().getNumber());
+
+        return dto;
     }
 }

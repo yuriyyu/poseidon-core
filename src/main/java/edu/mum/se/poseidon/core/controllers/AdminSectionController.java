@@ -94,9 +94,7 @@ public class AdminSectionController {
     public ResponseEntity<?> getSectionList() {
         try {
             List<Section> sectionList = sectionService.getSectionList();
-            List<SectionDto> sectionDtoList = sectionList.stream()
-                    .map(e -> sectionMapper.getSectionDtoFrom(e))
-                    .collect(Collectors.toList());
+            List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity<>(sectionDtoList, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
