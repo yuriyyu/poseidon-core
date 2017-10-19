@@ -74,7 +74,9 @@ public class AdminScheduleController {
     @RequestMapping(path = "/schedules/generate", method = RequestMethod.POST)
     public ResponseEntity<?> generate(@RequestBody ScheduleGenerateDto dto) {
         Schedule schedule = this.scheduleService.generate(dto);
-        ScheduleDto scheduleDto = this.scheduleMapper.getScheduleDto(schedule);
+
+        // TODO: Complete Schedule Generation
+        ScheduleDto scheduleDto = new ScheduleDto();// this.scheduleMapper.getScheduleDto(schedule);
         return new ResponseEntity<>(scheduleDto, HttpStatus.OK);
     }
 }
