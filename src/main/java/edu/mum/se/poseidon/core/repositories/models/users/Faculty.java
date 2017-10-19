@@ -4,7 +4,10 @@ import edu.mum.se.poseidon.core.repositories.models.Course;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "faculties")
@@ -14,17 +17,24 @@ public class Faculty extends User {
 	private String academicDegree;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "faculty")
-    private List<Section> sections;
+    private List<Section> sections = new ArrayList<>();
 
-	@ManyToMany(mappedBy="faculties")
-    private List<Course> courses;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "faculties_courses",
+            joinColumns = @JoinColumn(name = "faculty_id"),
+            inverseJoinColumns = @JoinColumn(name="course_id"))
+    private Set<Course> courses = new HashSet<>();
     
-	public List<Course> getCourses() {
+	public Set<Course> getCourses() {
 		return courses;
 	}
 
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
+	public void setCourses(Set<Course> courses) {
+		this.courses.clear();
+
+		if(courses != null) {
+		    this.courses.addAll(courses);
+        }
 	}
 
 	public void addCourse(Course course) {

@@ -1,5 +1,8 @@
 package edu.mum.se.poseidon.core.controllers.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Yuriy Yugay on 10/18/2017.
  *
@@ -13,6 +16,15 @@ public class FacultyProfileDto {
     private String username;
     private String type;
     private String password;
+    private List<CourseInfoDto> courseList = new ArrayList<>();
+
+    public List<CourseInfoDto> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(List<CourseInfoDto> courseList) {
+        this.courseList = courseList;
+    }
 
     public Long getId() {
         return id;

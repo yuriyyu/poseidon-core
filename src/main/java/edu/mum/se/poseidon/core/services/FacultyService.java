@@ -1,8 +1,12 @@
 package edu.mum.se.poseidon.core.services;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.mum.se.poseidon.core.controllers.dto.FacultyProfileDto;
+import edu.mum.se.poseidon.core.repositories.CourseRepository;
+import edu.mum.se.poseidon.core.repositories.models.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class FacultyService {
 
 	private FacultyRepository facultyRepository;
+	private CourseRepository courseRepository;
 	
 	@Autowired
-	public FacultyService(FacultyRepository facultyRepository) {
+	public FacultyService(FacultyRepository facultyRepository,
+                          CourseRepository courseRepository) {
 		this.facultyRepository = facultyRepository;
+		this.courseRepository = courseRepository;
 	}
 	
 	public List<Faculty> getFacultyList() {
@@ -35,10 +42,16 @@ public class FacultyService {
             throw new RuntimeException("User not found");
         }
 
+        Set<Long> courseIds = profileDto.getCourseList().stream()
+                .map(courseInfoDto -> courseInfoDto.getId())
+                .collect(Collectors.toSet());
+        Set<Course> courses = courseRepository.findByIdIn(courseIds);
+
         faculty.setFirstName(profileDto.getFirstName());
         faculty.setLastName(profileDto.getLastName());
         faculty.setUsername(profileDto.getUsername());
         faculty.setPassword(profileDto.getPassword());
+        faculty.setCourses(courses);
 
         faculty = facultyRepository.save(faculty);
 

@@ -1,7 +1,10 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +40,11 @@ public class CourseMapper {
 					.stream()
 					.map(p -> prerequisiteMapper.getPrerequisiteDto(p))
 					.collect(Collectors.toList()));
-		courseDto.setFaculties(course.getFaculties()
-					.stream()
-					.map(f -> facultyMapper.getFacultyProfileDtoFrom(f))
-					.collect(Collectors.toList()));
+		// TODO I think you we don't need this block : Yuriy
+//		courseDto.setFaculties(course.getFaculties()
+//					.stream()
+//					.map(f -> facultyMapper.getFacultyProfileDtoFrom(f))
+//					.collect(Collectors.toList()));
 		return courseDto;
 	}
 	
@@ -57,7 +61,31 @@ public class CourseMapper {
 		course.setFaculties(courseDto.getFaculties()
 					.stream()
 					.map(f -> facultyMapper.getFaculty(f))
-					.collect(Collectors.toList()));
+					.collect(Collectors.toSet()));
 		return course;
 	}
+
+    public List<CourseInfoDto> getCourseInfoDtoList(Set<Course> courses) {
+        if(courses == null) {
+            return null;
+        }
+
+        return courses.stream()
+                .map(c -> getCourseInfoDto(c))
+                .filter(dto -> dto != null)
+                .collect(Collectors.toList());
+    }
+
+    public CourseInfoDto getCourseInfoDto(Course course) {
+	    if(course == null) {
+	        return null;
+        }
+
+        CourseInfoDto dto = new CourseInfoDto();
+	    dto.setId(course.getId());
+	    dto.setName(course.getName());
+	    dto.setNumber(course.getNumber());
+
+	    return dto;
+    }
 }

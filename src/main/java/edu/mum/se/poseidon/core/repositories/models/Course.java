@@ -5,7 +5,9 @@ import javax.persistence.*;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Yuriy Yugay on 10/10/2017.
@@ -23,10 +25,8 @@ public class Course
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Course> prerequisites = new ArrayList<>();
     
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinTable(joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"), 
-    		   inverseJoinColumns = @JoinColumn(name = "faculty_id", referencedColumnName = "id"))
-    private List<Faculty> faculties = new ArrayList<>();
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<Faculty> faculties = new HashSet<>();
     
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "SECTION_ID")
@@ -68,11 +68,11 @@ public class Course
         this.sections = sections;
     }
     
-    public List<Faculty> getFaculties(){
+    public Set<Faculty> getFaculties(){
     	return faculties;
     }
     
-    public void setFaculties(List<Faculty> faculties) {
+    public void setFaculties(Set<Faculty> faculties) {
     	this.faculties = faculties;
     }
     

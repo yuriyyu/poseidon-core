@@ -3,7 +3,9 @@ package edu.mum.se.poseidon.core.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
 import edu.mum.se.poseidon.core.controllers.dto.FacultyProfileDto;
+import edu.mum.se.poseidon.core.controllers.mapper.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,27 +24,34 @@ public class FacultyController {
 
 	private FacultyService facultyService;
 	private FacultyMapper facultyMapper;
+	private CourseMapper courseMapper;
 	
 	@Autowired
-	public FacultyController(FacultyService facultyService, FacultyMapper facultyMapper) {
+	public FacultyController(FacultyService facultyService,
+                             FacultyMapper facultyMapper,
+                             CourseMapper courseMapper) {
 		this.facultyService = facultyService;
 		this.facultyMapper = facultyMapper;
+		this.courseMapper = courseMapper;
 	}
 	
 	@RequestMapping(path="/faculties", method = RequestMethod.GET)
 	public ResponseEntity<?> getFacultyList(){
 		List<Faculty> faculties = facultyService.getFacultyList();
-		List<FacultyProfileDto> dtos = faculties.stream()
-				.map(f -> facultyMapper.getFacultyProfileDtoFrom(f))
-				.collect(Collectors.toList());
+		// TODO It should be list of some other objects -- Yuriy
+		List<FacultyProfileDto> dtos = null;
+//		List<FacultyProfileDto> dtos = faculties.stream()
+//				.map(f -> facultyMapper.getFacultyProfileDtoFrom(f))
+//				.collect(Collectors.toList());
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/faculties/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getStudentProfile(@PathVariable(name = "id") long id)
+	public ResponseEntity<?> getFacultyProfile(@PathVariable(name = "id") long id)
 			throws Exception {
 		Faculty faculty = facultyService.getFaculty(id);
-		FacultyProfileDto dto = facultyMapper.getFacultyProfileDtoFrom(faculty);
+		List<CourseInfoDto> courseInfoDtoList = courseMapper.getCourseInfoDtoList(faculty.getCourses());
+		FacultyProfileDto dto = facultyMapper.getFacultyProfileDtoFrom(faculty, courseInfoDtoList);
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
@@ -51,7 +60,8 @@ public class FacultyController {
 	public ResponseEntity<?> updateProfile(@PathVariable long id, @RequestBody FacultyProfileDto profileDto)
 			throws Exception {
         Faculty faculty = facultyService.updateProfile(id, profileDto);
-        FacultyProfileDto dto = facultyMapper.getFacultyProfileDtoFrom(faculty);
+		List<CourseInfoDto> courseInfoDtoList = courseMapper.getCourseInfoDtoList(faculty.getCourses());
+        FacultyProfileDto dto = facultyMapper.getFacultyProfileDtoFrom(faculty, courseInfoDtoList);
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}

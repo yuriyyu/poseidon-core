@@ -1,14 +1,18 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
+import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
 import edu.mum.se.poseidon.core.controllers.dto.FacultyProfileDto;
 import org.springframework.stereotype.Component;
 
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 
+import java.util.List;
+
 @Component
 public class FacultyMapper {
 
-	public FacultyProfileDto getFacultyProfileDtoFrom(Faculty faculty) {
+	public FacultyProfileDto getFacultyProfileDtoFrom(Faculty faculty,
+                                                      List<CourseInfoDto> courseInfoDtos) {
 		if(faculty == null) {
 			return null;
 		}
@@ -19,6 +23,8 @@ public class FacultyMapper {
 		dto.setLastName(faculty.getLastName());
 		dto.setUsername(faculty.getUsername());
 		dto.setPassword(faculty.getPassword());
+		dto.setCourseList(courseInfoDtos);
+
 		dto.setType(faculty.getType());
 		return dto;
 	}

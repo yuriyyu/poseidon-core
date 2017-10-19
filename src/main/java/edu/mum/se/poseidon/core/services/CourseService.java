@@ -34,7 +34,7 @@ public class CourseService {
 		course.setFaculties(courseDto.getFaculties()
 				.stream()
 				.map(f -> facultyMapper.getFaculty(f))
-				.collect(Collectors.toList()));
+				.collect(Collectors.toSet()));
 		course.setPrerequisites(courseDto.getPrerequisites().stream()
 				.map(pre -> prerequisiteMapper.getCourse(pre))
 				.collect(Collectors.toList()));
@@ -49,7 +49,7 @@ public class CourseService {
 		course.setFaculties(courseDto.getFaculties()
 				.stream()
 				.map(f -> facultyMapper.getFaculty(f))
-				.collect(Collectors.toList()));
+				.collect(Collectors.toSet()));
 		course.setPrerequisites(courseDto.getPrerequisites().stream()
 				.map(pre -> prerequisiteMapper.getCourse(pre))
 				.collect(Collectors.toList()));
