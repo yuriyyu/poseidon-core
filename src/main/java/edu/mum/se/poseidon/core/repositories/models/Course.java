@@ -20,12 +20,12 @@ public class Course
     private String name;
     private Integer number;
     
-    @OneToMany(orphanRemoval = false)
-    @JoinColumn(name = "COURSE_ID")
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Course> prerequisites = new ArrayList<>();
     
-    @OneToMany(orphanRemoval = false)
-    @JoinColumn(name = "FACULTY_ID")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"), 
+    		   inverseJoinColumns = @JoinColumn(name = "faculty_id", referencedColumnName = "id"))
     private List<Faculty> faculties = new ArrayList<>();
     
     @OneToMany(orphanRemoval = true)

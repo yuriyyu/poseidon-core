@@ -11,6 +11,7 @@ public class FacultyProfileDto {
     private String firstName;
     private String lastName;
     private String username;
+    private String type;
     private String password;
 
     public Long getId() {
@@ -43,6 +44,14 @@ public class FacultyProfileDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getPassword() {

@@ -19,7 +19,7 @@ public class FacultyMapper {
 		dto.setLastName(faculty.getLastName());
 		dto.setUsername(faculty.getUsername());
 		dto.setPassword(faculty.getPassword());
-
+		dto.setType(faculty.getType());
 		return dto;
 	}
 	
@@ -30,6 +30,7 @@ public class FacultyMapper {
 		faculty.setLastName(facultyDto.getLastName());
 		faculty.setUsername(facultyDto.getUsername());
 		faculty.setPassword(facultyDto.getPassword());
+		faculty.setType(facultyDto.getType());
 		return faculty;
 	}
 }

@@ -16,8 +16,7 @@ public class Faculty extends User {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "faculty")
     private List<Section> sections;
 
-	@OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "FACULTY_ID")
+	@ManyToMany(mappedBy="faculties")
     private List<Course> courses;
     
 	public List<Course> getCourses() {
