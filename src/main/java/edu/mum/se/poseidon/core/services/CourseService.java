@@ -1,5 +1,6 @@
 package edu.mum.se.poseidon.core.services;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,10 @@ public class CourseService {
 	
 	public Course editCourse(CourseDto courseDto) {
 		Course course = courseRepository.findOne(courseDto.getId());
+		for(Faculty f: course.getFaculties()) {
+			f.getCourses().remove(course);
+			facultyRepository.save(f);
+		}
 		course.setName(courseDto.getName());
 		course.setNumber(courseDto.getNumber());
 		course.setPrerequisites(courseDto.getPrerequisites().stream()
