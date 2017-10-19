@@ -40,15 +40,26 @@ public class CourseMapper {
 					.stream()
 					.map(p -> prerequisiteMapper.getPrerequisiteDto(p))
 					.collect(Collectors.toList()));
-		// TODO I think you we don't need this block : Yuriy
-//		courseDto.setFaculties(course.getFaculties()
-//					.stream()
-//					.map(f -> facultyMapper.getFacultyProfileDtoFrom(f))
-//					.collect(Collectors.toList()));
+		
+		courseDto.setFaculties(course.getFaculties()
+					.stream()
+					.map(f -> facultyMapper.getFacultyDto(f))
+					.collect(Collectors.toList()));
 		return courseDto;
 	}
-	
-	public Course getCourse(CourseDto courseDto) {
+
+    public List<CourseInfoDto> getCourseInfoDtoList(Set<Course> courses) {
+        if(courses == null) {
+            return null;
+        }
+
+        return courses.stream()
+                .map(c -> getCourseInfoDto(c))
+                .filter(dto -> dto != null)
+                .collect(Collectors.toList());
+    }
+    
+    public Course getCourse(CourseDto courseDto) {
 		Course course = new Course();
 		course.setId(courseDto.getId());
 		course.setName(courseDto.getName());
@@ -64,17 +75,6 @@ public class CourseMapper {
 					.collect(Collectors.toSet()));
 		return course;
 	}
-
-    public List<CourseInfoDto> getCourseInfoDtoList(Set<Course> courses) {
-        if(courses == null) {
-            return null;
-        }
-
-        return courses.stream()
-                .map(c -> getCourseInfoDto(c))
-                .filter(dto -> dto != null)
-                .collect(Collectors.toList());
-    }
 
     public CourseInfoDto getCourseInfoDto(Course course) {
 	    if(course == null) {

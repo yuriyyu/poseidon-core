@@ -3,6 +3,8 @@ package edu.mum.se.poseidon.core.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.mum.se.poseidon.core.controllers.dto.CourseDto;
+import edu.mum.se.poseidon.core.controllers.dto.FacultyDto;
 import edu.mum.se.poseidon.core.controllers.mapper.CourseMapper;
 import edu.mum.se.poseidon.core.repositories.models.Course;
 import edu.mum.se.poseidon.core.services.CourseService;
@@ -22,6 +25,7 @@ public class AdminCourseController {
 
 	private CourseService courseService;
 	private CourseMapper courseMapper;
+	private static final Logger log = LoggerFactory.getLogger(AdminCourseController.class);
 	
 	@Autowired
 	public AdminCourseController(CourseService courseService, CourseMapper courseMapper) {

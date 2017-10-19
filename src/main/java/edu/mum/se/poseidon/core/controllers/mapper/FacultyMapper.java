@@ -1,6 +1,7 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
 import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
+import edu.mum.se.poseidon.core.controllers.dto.FacultyDto;
 import edu.mum.se.poseidon.core.controllers.dto.FacultyProfileDto;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class FacultyMapper {
 		return dto;
 	}
 	
-	public Faculty getFaculty(FacultyProfileDto facultyDto) {
+	public Faculty getFaculty(FacultyDto facultyDto) {
 		Faculty faculty = new Faculty();
 		faculty.setId(facultyDto.getId());
 		faculty.setFirstName(facultyDto.getFirstName());
@@ -38,5 +39,16 @@ public class FacultyMapper {
 		faculty.setPassword(facultyDto.getPassword());
 		faculty.setType(facultyDto.getType());
 		return faculty;
+	}
+	
+	public FacultyDto getFacultyDto(Faculty faculty) {
+		FacultyDto dto = new FacultyDto();
+		dto.setId(faculty.getId());
+		dto.setFirstName(faculty.getFirstName());
+		dto.setLastName(faculty.getLastName());
+		dto.setUsername(faculty.getUsername());
+		dto.setPassword(faculty.getPassword());
+		dto.setType(faculty.getType());
+		return dto;
 	}
 }

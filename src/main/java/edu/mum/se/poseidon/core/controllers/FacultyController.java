@@ -3,7 +3,9 @@ package edu.mum.se.poseidon.core.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.mum.se.poseidon.core.controllers.dto.BlockDto;
 import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
+import edu.mum.se.poseidon.core.controllers.dto.FacultyDto;
 import edu.mum.se.poseidon.core.controllers.dto.FacultyProfileDto;
 import edu.mum.se.poseidon.core.controllers.mapper.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.mum.se.poseidon.core.controllers.mapper.FacultyMapper;
+import edu.mum.se.poseidon.core.repositories.models.Block;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.services.FacultyService;
 
@@ -64,5 +67,22 @@ public class FacultyController {
         FacultyProfileDto dto = facultyMapper.getFacultyProfileDtoFrom(faculty, courseInfoDtoList);
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+	
+	/* USED FOR ADMIN */
+	@RequestMapping(path="/facultylist", method = RequestMethod.GET)
+	public ResponseEntity<?> getFaculties(){
+		List<Faculty> faculties = facultyService.getFacultyList();
+		List<FacultyDto> dtos = faculties.stream()
+				.map(f -> facultyMapper.getFacultyDto(f))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
+	
+	@RequestMapping(path="/facultylist/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAFaculty(@PathVariable long id){
+		Faculty faculty = facultyService.getFaculty(id);
+		FacultyDto bdo = facultyMapper.getFacultyDto(faculty);
+		return new ResponseEntity<>(bdo, HttpStatus.OK);
 	}
 }
