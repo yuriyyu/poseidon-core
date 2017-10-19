@@ -28,8 +28,7 @@ public class Course
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Faculty> faculties = new HashSet<>();
     
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "SECTION_ID")
+    @OneToMany(orphanRemoval = true, mappedBy = "course")
     private List<Section> sections = new ArrayList<>();
     
     public String getName() {

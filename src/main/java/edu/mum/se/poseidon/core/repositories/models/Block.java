@@ -1,10 +1,9 @@
 package edu.mum.se.poseidon.core.repositories.models;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "blocks")
@@ -18,6 +17,17 @@ public class Block
     @ManyToOne
     @JoinColumn(name = "ENTRY_ID", nullable = false)
     private Entry entry;
+
+    @OneToMany(mappedBy = "block")
+    private List<Section> sectionList = new ArrayList<>();
+
+    public List<Section> getSectionList() {
+        return sectionList;
+    }
+
+    public void setSectionList(List<Section> sectionList) {
+        this.sectionList = sectionList;
+    }
 
     public String getName() {
         return name;

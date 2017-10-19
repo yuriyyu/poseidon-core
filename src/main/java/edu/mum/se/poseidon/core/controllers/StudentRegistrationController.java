@@ -50,22 +50,6 @@ public class StudentRegistrationController {
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(path = "/student/{studentId}/section/registrated", method = RequestMethod.GET)
-    public ResponseEntity<?> getRegisteredSectionByStudent(@PathVariable(name = "studentId") long studentId) {
-        try {
-            List<Section> sectionList = registrationImpl.getRegisteredSectionByStudent(studentId);
-            List<SectionDto> sectionDtoList = sectionList
-                    .stream()
-                    .map(s -> sectionMapper.getSectionDtoFrom(s))
-                    .collect(Collectors.toList());
-            return new ResponseEntity(sectionDtoList, HttpStatus.OK);
-        } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     @RequestMapping(path = "/student/{studentId}/section/{sectionId}", method = RequestMethod.GET)
     public ResponseEntity<?> registerToSection(@PathVariable(name = "studentId") long studentId,
                                                @PathVariable(name = "sectionId") long sectionId) {
