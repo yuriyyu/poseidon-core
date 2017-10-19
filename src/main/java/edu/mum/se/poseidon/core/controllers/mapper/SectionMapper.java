@@ -69,4 +69,24 @@ public class SectionMapper {
 
         return dto;
     }
+
+    public List<Section> getSectionListFrom(List<SectionDto> sectionDtoList) {
+        if (sectionDtoList == null || sectionDtoList.isEmpty()) {
+            return null;
+        }
+        return sectionDtoList
+                .stream()
+                .map(s -> getSectionFrom(s))
+                .collect(Collectors.toList());
+    }
+
+    public List<SectionDto> getSectionDtoListFrom(List<Section> sectionList) {
+        if (sectionList == null || sectionList.isEmpty()) {
+            return null;
+        }
+        return sectionList
+                .stream()
+                .map(s -> getSectionDtoFrom(s))
+                .collect(Collectors.toList());
+    }
 }
