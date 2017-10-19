@@ -17,4 +17,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findAllByDeleted(boolean is_deleted);
 
     Set<Course> findByIdIn(Set<Long> courseIds);
+
+    Course findCourseByNumber(int number);
 }
