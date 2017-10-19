@@ -1,6 +1,7 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
 import edu.mum.se.poseidon.core.configs.Helper;
+import edu.mum.se.poseidon.core.controllers.dto.FacultySectionDto;
 import edu.mum.se.poseidon.core.controllers.dto.SectionDto;
 import edu.mum.se.poseidon.core.controllers.dto.StudentSectionDto;
 import edu.mum.se.poseidon.core.repositories.models.Section;
@@ -88,5 +89,34 @@ public class SectionMapper {
                 .stream()
                 .map(s -> getSectionDtoFrom(s))
                 .collect(Collectors.toList());
+    }
+
+    public List<FacultySectionDto> getFacultySectionDtoList(List<Section> sectionList) {
+        if(sectionList == null) {
+            return null;
+        }
+
+        return sectionList.stream()
+                .map(s -> getFacultySectionDto(s))
+                .filter(dto -> dto != null)
+                .collect(Collectors.toList());
+    }
+
+    public FacultySectionDto getFacultySectionDto(Section section) {
+        if(section == null) {
+            return null;
+        }
+
+        FacultySectionDto dto = new FacultySectionDto();
+        dto.setBlockName(section.getBlock().getName());
+        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setId(section.getId());
+        dto.setLocation(section.getLocation());
+        dto.setMaxSeats(section.getMaxSeats());
+        dto.setCourseName(section.getCourse().getName());
+        dto.setCourseNumber(section.getCourse().getNumber());
+
+        return dto;
     }
 }
