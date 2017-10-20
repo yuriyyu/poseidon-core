@@ -3,6 +3,7 @@ package edu.mum.se.poseidon.core.controllers.dto;
 public class SectionDto {
 
     private Long id;
+    private String name;
     private Integer maxSeats;
     private String location;
     private String startDate;
@@ -10,6 +11,14 @@ public class SectionDto {
     private String blockName;
     private String facultyFirstName;
     private String facultyLastName;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

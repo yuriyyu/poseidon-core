@@ -14,8 +14,6 @@ public class Section
 
     private Integer maxSeats;
     private String location;
-    private LocalDate startDate;
-    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "BLOCK_ID", nullable = false)
@@ -73,22 +71,6 @@ public class Section
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public List<StudentSection> getStudentSections() {
