@@ -142,8 +142,8 @@ public class ScheduleService {
             section.setMaxSeats(DEFAULT_MAX_SEAT);
             section.setCourse(sci);
             section.setLocation("Location-" + i);
-            section.setStartDate(LocalDate.parse(b.getBlock().getStartDate()));
-            section.setEndDate(LocalDate.parse(b.getBlock().getEndDate()));
+//            section.setStartDate(LocalDate.parse(b.getBlock().getStartDate()));
+//            section.setEndDate(LocalDate.parse(b.getBlock().getEndDate()));
 
             b.addSection(sectionMapper.getSectionDtoFrom(section));
         }

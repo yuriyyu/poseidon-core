@@ -53,10 +53,27 @@ public class RegistrationImpl implements IRegistration {
 
     @Override
     public List<Section> getAvailableSections(Long studentId) throws PoseidonException {
-        List<Section> retVal = new ArrayList<>();
         // Finding student's all section
         List<Section> sectionList = sectionRepository.findSectionsByDeleted(false);
         List<Section> studentPassedSectionList = sectionRepository.findSectionsPassedByStudentId(studentId);
+        return getSectionForRegister(sectionList, studentPassedSectionList);
+    }
+
+    @Override
+    public List<Section> getRegisteredSectionByStudent(Long studentId) {
+        return sectionRepository.findSectionsByStudentId(studentId);
+    }
+
+    public List<Section> getSectionByFaculty(long facultyId) {
+        Faculty faculty = facultyRepository.findOne(facultyId);
+        if (faculty == null) {
+            throw new RuntimeException("Faculty not found");
+        }
+        return sectionRepository.findByFaculty(faculty);
+    }
+
+    private List<Section> getSectionForRegister(List<Section> sectionList, List<Section> studentPassedSectionList) {
+        List<Section> retVal = new ArrayList<>();
         // checks that student passed course's pre-requisite
         // add sections that has no pre-requisites
         retVal.addAll(sectionList.stream()
@@ -79,22 +96,5 @@ public class RegistrationImpl implements IRegistration {
             }
         }
         return retVal;
-    }
-
-    @Override
-    public List<Section> getRegisteredSectionByStudent(Long studentId) {
-        return sectionRepository.findSectionsByStudentId(studentId);
-    }
-
-    public List<Section> getSectionByFaculty(long facultyId) {
-        Faculty faculty = facultyRepository.findOne(facultyId);
-        if(faculty == null) {
-            throw new RuntimeException("Faculty not found");
-        }
-        return sectionRepository.findByFaculty(faculty);
-    }
-
-    public List<Section> getSectionForRegister() {
-        return null;
     }
 }

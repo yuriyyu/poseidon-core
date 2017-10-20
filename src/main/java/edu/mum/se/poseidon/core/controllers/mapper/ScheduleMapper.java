@@ -1,6 +1,7 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
 import edu.mum.se.poseidon.core.controllers.dto.*;
+import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
 import edu.mum.se.poseidon.core.repositories.models.Track;
 import edu.mum.se.poseidon.core.services.Schedule.BlockTrack;
@@ -59,9 +60,11 @@ public class ScheduleMapper {
         return  dto;
     }
 
-    public StudentScheduleDto getStudentScheduleDto(String entryName, List<StudentSectionDto> studentSectionDtoList) {
+    public StudentScheduleDto getStudentScheduleDto(Entry entry, List<StudentSectionDto> studentSectionDtoList) {
         StudentScheduleDto dto = new StudentScheduleDto();
-        dto.setEntryName(entryName);
+        if(entry != null) {
+            dto.setEntryName(entry.getName());
+        }
         dto.setStudentSectionDtoList(studentSectionDtoList);
 
         return dto;

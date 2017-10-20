@@ -73,7 +73,9 @@ public class AdminEntryController {
                 FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already started.");
                 return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
             }
-            entry.getBlockList().stream().forEach(b -> blockService.deleteBlock(b.getId()));
+            if (entry.getBlockList() != null) {
+                entry.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
+            }
             entryService.deleteEntry(id);
             return new ResponseEntity(new EntryDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
@@ -101,6 +103,7 @@ public class AdminEntryController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editEntry(@RequestBody EntryDto entryDto) {
+        System.out.println("'Edit entry' request is received. Entry name=" + entryDto.getName());
         log.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
@@ -109,7 +112,9 @@ public class AdminEntryController {
                 return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
             }
             int totalNumber = calculateBlockNumber(entry);
-            entry.getBlockList().stream().forEach(b -> blockService.deleteBlock(b.getId()));
+            if (entry.getBlockList() != null) {
+                entry.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
+            }
             // TODO create blocks
             // blockService.createBlock();
             // entry.setBlockList();

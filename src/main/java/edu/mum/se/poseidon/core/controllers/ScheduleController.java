@@ -56,10 +56,11 @@ public class ScheduleController {
 
             Student student = studentService.getStudent(studentId);
             Entry entry = student.getEntry();
-            StudentScheduleDto dto = scheduleMapper.getStudentScheduleDto(entry.getName(), studentSectionDtoList);
+            StudentScheduleDto dto = scheduleMapper.getStudentScheduleDto(entry, studentSectionDtoList);
 
             return new ResponseEntity(dto, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
             return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
         }
