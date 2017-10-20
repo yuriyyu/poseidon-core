@@ -65,7 +65,7 @@ public class BlockService {
     	for(int i = 0; i < numberOfBlocks; i++) {
     		Block block = new Block();
     		block.setEntry(entry);
-    		block.setName(entry.getName() + "-" + (i + 1));
+    		block.setName(entry.getName() + "-B" + (i + 1));
     		LocalDate startDate = tmpStartDate
 					.plusDays(8 - tmpStartDate.getDayOfWeek().getValue());
     		block.setStartDate(startDate);
