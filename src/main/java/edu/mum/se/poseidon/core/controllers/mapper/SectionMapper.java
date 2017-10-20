@@ -1,13 +1,18 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
 import edu.mum.se.poseidon.core.configs.Helper;
+import edu.mum.se.poseidon.core.controllers.dto.AdminSectionDto;
 import edu.mum.se.poseidon.core.controllers.dto.FacultySectionDto;
 import edu.mum.se.poseidon.core.controllers.dto.SectionDto;
 import edu.mum.se.poseidon.core.controllers.dto.StudentSectionDto;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -91,15 +96,26 @@ public class SectionMapper {
                 .collect(Collectors.toList());
     }
 
-    public List<FacultySectionDto> getFacultySectionDtoList(List<Section> sectionList) {
+    public Map<Long, List<FacultySectionDto>> getFacultySectionDtoMap(List<Section> sectionList) {
         if(sectionList == null) {
             return null;
         }
 
-        return sectionList.stream()
-                .map(s -> getFacultySectionDto(s))
-                .filter(dto -> dto != null)
-                .collect(Collectors.toList());
+        Map<Long, List<FacultySectionDto>> map = new HashMap<>();
+        for(Section s : sectionList) {
+            List<FacultySectionDto> list = map.get(s.getId());
+            if(list == null) {
+                list = new ArrayList<>();
+                map.put(s.getId(), list);
+            }
+
+            FacultySectionDto dto = getFacultySectionDto(s);
+            if(dto != null) {
+                list.add(dto);
+            }
+        }
+
+        return map;
     }
 
     public FacultySectionDto getFacultySectionDto(Section section) {
@@ -116,6 +132,37 @@ public class SectionMapper {
         dto.setMaxSeats(section.getMaxSeats());
         dto.setCourseName(section.getCourse().getName());
         dto.setCourseNumber(section.getCourse().getNumber());
+
+        return dto;
+    }
+
+    public List<AdminSectionDto> getAdminSectionDtoList(List<Section> sectionList) {
+        if(sectionList == null) {
+            return null;
+        }
+
+        return sectionList.stream()
+                .map(s -> getAdminSectionDto(s))
+                .filter(dto -> dto != null)
+                .collect(Collectors.toList());
+    }
+
+    public AdminSectionDto getAdminSectionDto(Section section) {
+        if(section == null) {
+            return null;
+        }
+
+        AdminSectionDto dto = new AdminSectionDto();
+        dto.setBlockName(section.getBlock().getName());
+        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setId(section.getId());
+        dto.setLocation(section.getLocation());
+        dto.setMaxSeats(section.getMaxSeats());
+        dto.setCourseName(section.getCourse().getName());
+        dto.setCourseNumber(section.getCourse().getNumber());
+        dto.setFacultyFirstName(section.getFaculty().getFirstName());
+        dto.setFacultyLastName(section.getFaculty().getLastName());
 
         return dto;
     }
