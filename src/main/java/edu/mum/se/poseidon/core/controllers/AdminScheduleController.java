@@ -4,6 +4,8 @@ import edu.mum.se.poseidon.core.controllers.dto.ScheduleDto;
 import edu.mum.se.poseidon.core.controllers.dto.ScheduleGenerateDto;
 import edu.mum.se.poseidon.core.controllers.mapper.ScheduleMapper;
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
+import edu.mum.se.poseidon.core.repositories.models.Track;
+import edu.mum.se.poseidon.core.services.Schedule.BlockTrack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -73,10 +76,9 @@ public class AdminScheduleController {
 
     @RequestMapping(path = "/schedules/generate", method = RequestMethod.POST)
     public ResponseEntity<?> generate(@RequestBody ScheduleGenerateDto dto) {
-        Schedule schedule = this.scheduleService.generate(dto);
-
-        // TODO: Complete Schedule Generation
-        ScheduleDto scheduleDto = new ScheduleDto();// this.scheduleMapper.getScheduleDto(schedule);
+        Map<Track, List<BlockTrack>> schedule = this.scheduleService.generate(dto);
+//        ScheduleDto scheduleDto = this.scheduleMapper.getScheduleDto(schedule);
+        ScheduleDto scheduleDto = this.scheduleMapper.getScheduleDtoByMap(schedule);
         return new ResponseEntity<>(scheduleDto, HttpStatus.OK);
     }
 }

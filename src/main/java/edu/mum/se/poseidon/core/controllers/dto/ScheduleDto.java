@@ -1,14 +1,26 @@
 package edu.mum.se.poseidon.core.controllers.dto;
 
 import edu.mum.se.poseidon.core.repositories.models.Section;
+import edu.mum.se.poseidon.core.repositories.models.Track;
+import edu.mum.se.poseidon.core.services.Schedule.BlockTrack;
 
 import java.util.List;
+import java.util.Map;
 
 public class ScheduleDto {
     private Long id;
     private String name;
     private int status;
     private List<SectionDto> sections;
+    private Map<Track, List<BlockTrack>> map;
+
+    public Map<Track, List<BlockTrack>> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<Track, List<BlockTrack>> map) {
+        this.map = map;
+    }
 
     public String getName() {
         return name;
