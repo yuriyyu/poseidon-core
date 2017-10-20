@@ -5,6 +5,10 @@ import edu.mum.se.poseidon.core.controllers.dto.EntryDto;
 import edu.mum.se.poseidon.core.repositories.models.Entry;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class EntryMapper {
 
@@ -38,5 +42,12 @@ public class EntryMapper {
         entry.setUsRes(entryDto.getUsRes());
         entry.setName(entryDto.getName());
         return entry;
+    }
+
+    public List<EntryDto> getEntryDtoListFrom(List<Entry> entryList) {
+        if (entryList == null) {
+            return new ArrayList<>();
+        }
+        return entryList.stream().map(e -> getEntryDtoFrom(e)).collect(Collectors.toList());
     }
 }

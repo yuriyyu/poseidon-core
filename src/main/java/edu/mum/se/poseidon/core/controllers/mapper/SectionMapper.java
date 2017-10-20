@@ -88,7 +88,7 @@ public class SectionMapper {
 
     public List<SectionDto> getSectionDtoListFrom(List<Section> sectionList) {
         if (sectionList == null || sectionList.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
         return sectionList
                 .stream()

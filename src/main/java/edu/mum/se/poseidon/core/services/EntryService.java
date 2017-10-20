@@ -20,8 +20,7 @@ public class EntryService {
     }
 
     public Entry createEntry(Entry entry) throws PoseidonException {
-        entryRepository.save(entry);
-        return entry;
+        return entryRepository.save(entry);
     }
 
     public void deleteEntry(Long id) throws PoseidonException {

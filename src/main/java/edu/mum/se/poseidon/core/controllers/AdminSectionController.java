@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ public class AdminSectionController {
         logger.debug("'Delete section' request is received. Section ID=" + id);
         try {
             Section section = sectionService.getSection(id);
-            if (section != null && section.getStartDate().isBefore(LocalDate.now())) {
+            if (section != null && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
                 FailResponseWrapper failResponse = new FailResponseWrapper("Section is already started.");
                 return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
             }
@@ -74,7 +75,7 @@ public class AdminSectionController {
         logger.debug("'Edit section' request is received. section ID=" + sectionDto.getId());
         try {
             Section section = sectionMapper.getSectionFrom(sectionDto);
-            if (section != null && section.getStartDate().isBefore(LocalDate.now())) {
+            if (section != null && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
                 FailResponseWrapper failResponse = new FailResponseWrapper("Section is already started.");
                 return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
             }

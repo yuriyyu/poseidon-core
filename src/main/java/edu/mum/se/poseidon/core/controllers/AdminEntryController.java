@@ -4,6 +4,7 @@ import edu.mum.se.poseidon.core.controllers.dto.EntryDto;
 import edu.mum.se.poseidon.core.controllers.mapper.EntryMapper;
 import edu.mum.se.poseidon.core.controllers.wrapper.ErrorResponseWrapper;
 import edu.mum.se.poseidon.core.controllers.wrapper.FailResponseWrapper;
+import edu.mum.se.poseidon.core.repositories.models.Block;
 import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.services.BlockService;
 import edu.mum.se.poseidon.core.services.EntryService;
@@ -49,11 +50,11 @@ public class AdminEntryController {
                 return new ResponseEntity(failResponse, HttpStatus.CONFLICT);
             }
             int totalNumber = calculateBlockNumber(entry);
-            // TODO
-            // blockService.createBlock()
-            // entry.setBlockList(null);
-            EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.createEntry(entry));
-            return new ResponseEntity(entryDto1, HttpStatus.OK);
+            // for generate id in this entry
+            Entry entry1 = entryService.createEntry(entry);
+            entry1.setBlockList(blockService.autoGenerate(entry1, totalNumber));
+            entryService.editEntry(entry1);
+            return new ResponseEntity(entryMapper.getEntryDtoFrom(entry1), HttpStatus.OK);
         } catch (PoseidonException pe) {
             FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
             return new ResponseEntity(failResponse, HttpStatus.CONFLICT);
@@ -115,9 +116,7 @@ public class AdminEntryController {
             if (entry.getBlockList() != null) {
                 entry.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
             }
-            // TODO create blocks
-            // blockService.createBlock();
-            // entry.setBlockList();
+            entry.setBlockList(blockService.autoGenerate(entry, totalNumber));
             EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.editEntry(entry));
             return new ResponseEntity<>(entryDto1, HttpStatus.OK);
         } catch (PoseidonException pe) {
@@ -134,9 +133,7 @@ public class AdminEntryController {
     public ResponseEntity<?> getEntryList() {
         try {
             List<Entry> entryList = entryService.getEntryList();
-            List<EntryDto> entryDtoList = entryList.stream()
-                    .map(e -> entryMapper.getEntryDtoFrom(e))
-                    .collect(Collectors.toList());
+            List<EntryDto> entryDtoList = entryMapper.getEntryDtoListFrom(entryList);
             return new ResponseEntity<>(entryDtoList, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
