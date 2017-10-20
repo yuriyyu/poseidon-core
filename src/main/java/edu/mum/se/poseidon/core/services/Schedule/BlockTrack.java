@@ -9,24 +9,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockTrack {
-    private BlockDto block;
+    private Block block;
     private int nStudent;
-    private List<SectionDto> sections = new ArrayList<SectionDto>();
+    private List<Section> sections = new ArrayList<Section>();
 
-    public BlockTrack(BlockDto block, int nStudent) {
+    /**
+     * Creates BlockTrack
+     * @param block Block Entity
+     * @param nStudent Number of Student in the Block
+     */
+    public BlockTrack(Block block, int nStudent) {
         this.block = block;
         this.nStudent = nStudent;
     }
 
-    public void addSection(SectionDto section) {
+    public void addSection(Section section) {
         this.sections.add(section);
     }
 
-    public BlockDto getBlock() {
+    public Block getBlock() {
         return block;
     }
 
-    public void setBlock(BlockDto block) {
+    public void setBlock(Block block) {
         this.block = block;
     }
 
@@ -38,7 +43,11 @@ public class BlockTrack {
         this.nStudent = nStudent;
     }
 
-    public List<SectionDto> getSections() {
+    public List<Section> getSections() {
         return sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 }
