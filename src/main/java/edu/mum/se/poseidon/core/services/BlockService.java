@@ -1,6 +1,7 @@
 package edu.mum.se.poseidon.core.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import edu.mum.se.poseidon.core.controllers.dto.BlockDto;
 import edu.mum.se.poseidon.core.controllers.mapper.EntryMapper;
 import edu.mum.se.poseidon.core.repositories.BlockRepository;
 import edu.mum.se.poseidon.core.repositories.models.Block;
+import edu.mum.se.poseidon.core.repositories.models.Entry;
 
 @Service
 public class BlockService {
@@ -55,5 +57,23 @@ public class BlockService {
     	Block block = blockRepository.findOne(blockId);
     	block.setDeleted(true);
     	blockRepository.save(block);
+    }
+    
+    public List<Block> autoGenerate(Entry entry, int numberOfBlocks){
+    	List<Block> blocks = new ArrayList<>();
+    	LocalDate tmpStartDate = entry.getStartDate();
+    	for(int i = 0; i < numberOfBlocks; i++) {
+    		Block block = new Block();
+    		block.setEntry(entry);
+    		block.setName(entry.getName() + "-" + (i + 1));
+    		LocalDate startDate = tmpStartDate
+					.plusDays(8 - tmpStartDate.getDayOfWeek().getValue());
+    		block.setStartDate(startDate);
+    		block.setEndDate(startDate.plusDays(25));
+    		tmpStartDate = block.getEndDate();
+    		block = blockRepository.save(block);
+    		blocks.add(block);
+    	}
+    	return blocks;
     }
 }
