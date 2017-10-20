@@ -1,10 +1,13 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
-import edu.mum.se.poseidon.core.controllers.dto.ScheduleDto;
+import edu.mum.se.poseidon.core.controllers.dto.*;
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,5 +46,45 @@ public class ScheduleMapper {
                 .collect(Collectors.toList()));
 
         return schedule;
+    }
+
+    public StudentScheduleDto getStudentScheduleDto(String entryName, List<StudentSectionDto> studentSectionDtoList) {
+        StudentScheduleDto dto = new StudentScheduleDto();
+        dto.setEntryName(entryName);
+        dto.setStudentSectionDtoList(studentSectionDtoList);
+
+        return dto;
+    }
+
+    public List<FacultyScheduleDto> getFacultyScheduleDtoList(Map<Long, String> sectionToEntryNameMap,
+                                                              Map<Long, List<FacultySectionDto>> facultySectionDtoMap) {
+
+        List<FacultyScheduleDto> scheduleDtoList = new ArrayList<>();
+
+        for(Map.Entry<Long,String> entry : sectionToEntryNameMap.entrySet()) {
+            Long sectionId = entry.getKey();
+            String entryName = entry.getValue();
+            List<FacultySectionDto> list = facultySectionDtoMap.get(sectionId);
+
+            scheduleDtoList.add(getFacultyScheduleDto(entryName, list));
+
+        }
+        return scheduleDtoList;
+    }
+
+    public FacultyScheduleDto getFacultyScheduleDto(String name, List<FacultySectionDto> list) {
+        FacultyScheduleDto dto = new FacultyScheduleDto();
+        dto.setEntryName(name);
+        dto.setFacultySectionDtoList(list);
+
+        return dto;
+    }
+
+    public AdminScheduleDto getAdminScheduleDto(String name, List<AdminSectionDto> list) {
+        AdminScheduleDto dto = new AdminScheduleDto();
+        dto.setEntryName(name);
+        dto.setAdminSectionDtoList(list);
+
+        return dto;
     }
 }
