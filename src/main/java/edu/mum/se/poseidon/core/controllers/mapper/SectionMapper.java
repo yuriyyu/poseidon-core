@@ -35,8 +35,8 @@ public class SectionMapper {
         }
         SectionDto sectionDto = new SectionDto();
         sectionDto.setBlockName(section.getBlock().getName());
-        sectionDto.setEndDate(Helper.convertDateToString(section.getEndDate()));
-        sectionDto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        sectionDto.setEndDate(Helper.convertDateToString(section.getBlock().getEndDate()));
+        sectionDto.setStartDate(Helper.convertDateToString(section.getBlock().getStartDate()));
         sectionDto.setFacultyFirstName(section.getFaculty().getFirstName());
         sectionDto.setFacultyLastName(section.getFaculty().getLastName());
         sectionDto.setId(section.getId());
@@ -46,7 +46,7 @@ public class SectionMapper {
     }
 
     public List<StudentSectionDto> getStudentSectionDtoList(List<Section> sectionList) {
-        if(sectionList == null) {
+        if (sectionList == null) {
             return null;
         }
 
@@ -57,14 +57,14 @@ public class SectionMapper {
     }
 
     public StudentSectionDto getStudentSectionDto(Section section) {
-        if(section == null) {
+        if (section == null) {
             return null;
         }
 
         StudentSectionDto dto = new StudentSectionDto();
         dto.setBlockName(section.getBlock().getName());
-        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
-        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setEndDate(Helper.convertDateToString(section.getBlock().getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getBlock().getStartDate()));
         dto.setFacultyFirstName(section.getFaculty().getFirstName());
         dto.setFacultyLastName(section.getFaculty().getLastName());
         dto.setId(section.getId());
@@ -97,20 +97,20 @@ public class SectionMapper {
     }
 
     public Map<Long, List<FacultySectionDto>> getFacultySectionDtoMap(List<Section> sectionList) {
-        if(sectionList == null) {
+        if (sectionList == null) {
             return null;
         }
 
         Map<Long, List<FacultySectionDto>> map = new HashMap<>();
-        for(Section s : sectionList) {
+        for (Section s : sectionList) {
             List<FacultySectionDto> list = map.get(s.getId());
-            if(list == null) {
+            if (list == null) {
                 list = new ArrayList<>();
                 map.put(s.getId(), list);
             }
 
             FacultySectionDto dto = getFacultySectionDto(s);
-            if(dto != null) {
+            if (dto != null) {
                 list.add(dto);
             }
         }
@@ -119,14 +119,14 @@ public class SectionMapper {
     }
 
     public FacultySectionDto getFacultySectionDto(Section section) {
-        if(section == null) {
+        if (section == null) {
             return null;
         }
 
         FacultySectionDto dto = new FacultySectionDto();
         dto.setBlockName(section.getBlock().getName());
-        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
-        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setEndDate(Helper.convertDateToString(section.getBlock().getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getBlock().getStartDate()));
         dto.setId(section.getId());
         dto.setLocation(section.getLocation());
         dto.setMaxSeats(section.getMaxSeats());
@@ -137,7 +137,7 @@ public class SectionMapper {
     }
 
     public List<AdminSectionDto> getAdminSectionDtoList(List<Section> sectionList) {
-        if(sectionList == null) {
+        if (sectionList == null) {
             return null;
         }
 
@@ -148,14 +148,14 @@ public class SectionMapper {
     }
 
     public AdminSectionDto getAdminSectionDto(Section section) {
-        if(section == null) {
+        if (section == null) {
             return null;
         }
 
         AdminSectionDto dto = new AdminSectionDto();
         dto.setBlockName(section.getBlock().getName());
-        dto.setEndDate(Helper.convertDateToString(section.getEndDate()));
-        dto.setStartDate(Helper.convertDateToString(section.getStartDate()));
+        dto.setEndDate(Helper.convertDateToString(section.getBlock().getEndDate()));
+        dto.setStartDate(Helper.convertDateToString(section.getBlock().getStartDate()));
         dto.setId(section.getId());
         dto.setLocation(section.getLocation());
         dto.setMaxSeats(section.getMaxSeats());
