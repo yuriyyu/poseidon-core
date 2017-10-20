@@ -2,9 +2,11 @@ package edu.mum.se.poseidon.core.services;
 
 import edu.mum.se.poseidon.core.controllers.dto.UserDto;
 import edu.mum.se.poseidon.core.repositories.AdminRepository;
+import edu.mum.se.poseidon.core.repositories.EntryRepository;
 import edu.mum.se.poseidon.core.repositories.FacultyRepository;
 import edu.mum.se.poseidon.core.repositories.StudentRepository;
 import edu.mum.se.poseidon.core.repositories.UserRepository;
+import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.repositories.models.users.Admin;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
@@ -26,15 +28,18 @@ public class UserService {
     private UserRepository userRepository;
     private StudentRepository studentRepository;
     private FacultyRepository facultyRepository;
+    private EntryRepository entryRepository;
     private AdminRepository adminRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, StudentRepository studentRepository,
-    		FacultyRepository facultyRepository, AdminRepository adminRepository) {
+    		FacultyRepository facultyRepository, AdminRepository adminRepository,
+    		EntryRepository entryRepository) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.facultyRepository = facultyRepository;
         this.adminRepository = adminRepository;
+        this.entryRepository = entryRepository;
     }
 
     public User getUserByUsername(String username, String password) {
@@ -60,6 +65,8 @@ public class UserService {
     		student.setUsername(userDto.getUsername());
     		student.setPassword(userDto.getPassword());
     		student.setType(userDto.getType());
+    		Entry entry = entryRepository.findEntriesByDeleted(false).get(0);
+    		student.setEntry(entry);
     		student = studentRepository.save(student);
     		return student;
     	}

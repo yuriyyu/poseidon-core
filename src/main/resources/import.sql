@@ -1,8 +1,10 @@
+INSERT INTO entries (dcreated, is_deleted, dupdated, n_fpp_opt, n_fpp_students, n_mpp_opt, n_mpp_students, name, start_date, us_res) VALUES (now(), FALSE, now(), 100, 100, 100, 100, '2017-Aug', '2017-08-01', 35);
+
 INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'COMPRO', 'DEPT', 'password', 'admin', 'admin');
 INSERT INTO admins (id) VALUES ((SELECT id FROM users WHERE first_name='COMPRO' and last_name='DEPT'));
 
 INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'Stu', 'Dent', 'password', 'student', 'student');
-INSERT INTO students (id) VALUES ((SELECT id FROM users WHERE first_name='Stu' and last_name='Dent'));
+INSERT INTO students (id, entry_id) VALUES ((SELECT id FROM users WHERE first_name='Stu' and last_name='Dent'), 1);
 
 INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'Facul', 'Ty', 'password', 'faculty', 'faculty');
 INSERT INTO faculties (id) VALUES ((SELECT id FROM users WHERE first_name='Facul' and last_name='Ty'));
@@ -37,8 +39,6 @@ INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now()
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 575,'Practicum in Software Development');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 582,'Machine Learning');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 500,'Science of creative intelligence');
-
-INSERT INTO entries (dcreated, is_deleted, dupdated, n_fpp_opt, n_fpp_students, n_mpp_opt, n_mpp_students, name, start_date, us_res) VALUES (now(), FALSE, now(), 100, 100, 100, 100, '2017-Aug', '2017-08-01', 35);
 
 INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, entry_id) VALUES (now(), FALSE, now(), '2017-12-01', '2017-11-01', '2017-Nov', 1);
 
