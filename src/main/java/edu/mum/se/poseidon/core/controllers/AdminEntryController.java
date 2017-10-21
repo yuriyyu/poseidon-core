@@ -29,7 +29,7 @@ public class AdminEntryController {
 
     private EntryService entryService;
     private BlockService blockService;
-    private static final Logger log = LoggerFactory.getLogger(AdminEntryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdminEntryController.class);
     private EntryMapper entryMapper;
 
     @Autowired
@@ -42,37 +42,41 @@ public class AdminEntryController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/create", method = RequestMethod.POST)
     public ResponseEntity<?> createEntry(@RequestBody EntryDto entryDto) {
-        log.debug("'Create entry' request is received. Entry name=" + entryDto.getName());
+        logger.debug("'Create entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
-            if (entryService.getEntryByStartDate(entry.getStartDate()) != null) {
-                FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already exist with that date.");
-                return new ResponseEntity(failResponse, HttpStatus.CONFLICT);
+            if (entry.getStartDate().isBefore(LocalDate.now())) {
+                return new ResponseEntity("Start date is invalid.", HttpStatus.BAD_REQUEST);
             }
-            int totalNumber = calculateBlockNumber(entry);
+            if (entryService.getEntryByStartDate(entry.getStartDate()) != null) {
+                return new ResponseEntity("Entry is already exist with that date.", HttpStatus.CONFLICT);
+            }
             // for generate id in this entry
-            Entry entry1 = entryService.createEntry(entry);
-            entry1.setBlockList(blockService.autoGenerate(entry1, totalNumber));
-            entryService.editEntry(entry1);
-            return new ResponseEntity(entryMapper.getEntryDtoFrom(entry1), HttpStatus.OK);
+            entry = entryService.createEntry(entry);
+            int totalNumber = calculateBlockNumber(entry);
+            entry.setBlockList(blockService.autoGenerate(entry, totalNumber));
+            entryService.editEntry(entry);
+            return new ResponseEntity(entryMapper.getEntryDtoFrom(entry), HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.CONFLICT);
+            logger.error(pe.getMessage());
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/delete/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteEntry(@PathVariable(name = "id") long id) {
-        log.debug("'Delete entry' request is received. Entry ID=" + id);
+        logger.debug("'Delete entry' request is received. Entry ID=" + id);
         try {
             Entry entry = entryService.getEntry(id);
-            if (entry != null && entry.getStartDate().isBefore(LocalDate.now())) {
-                FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already started.");
-                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            if (entry == null) {
+                return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
+            }
+            if (entry.getStartDate().isBefore(LocalDate.now())) {
+                return new ResponseEntity("Entry is already started.", HttpStatus.BAD_REQUEST);
             }
             if (entry.getBlockList() != null) {
                 entry.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
@@ -80,64 +84,76 @@ public class AdminEntryController {
             entryService.deleteEntry(id);
             return new ResponseEntity(new EntryDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            logger.error(pe.getMessage());
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getEntry(@PathVariable long id) {
-        log.debug("'Get entry' request is received. Entry ID=" + id);
+        logger.debug("'Get entry' request is received. Entry ID=" + id);
         try {
             EntryDto entryDto = entryMapper.getEntryDtoFrom(entryService.getEntry(id));
+            if (entryDto == null) {
+                return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(entryDto, HttpStatus.OK);
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editEntry(@RequestBody EntryDto entryDto) {
-        System.out.println("'Edit entry' request is received. Entry name=" + entryDto.getName());
-        log.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
+        logger.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
-            if (entry != null && entry.getStartDate().isBefore(LocalDate.now())) {
-                FailResponseWrapper failResponse = new FailResponseWrapper("Entry is already started.");
-                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            if (entry == null) {
+                return new ResponseEntity("Entry cannot be null.", HttpStatus.BAD_REQUEST);
             }
-            int totalNumber = calculateBlockNumber(entry);
+            if (entry.getStartDate().isBefore(LocalDate.now())) {
+                return new ResponseEntity("Date is invalid.", HttpStatus.BAD_REQUEST);
+            }
+            entry = entryService.getEntry(entryDto.getId());
+            if (entry == null) {
+                return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
+            }
+            if (entry.getStartDate().isBefore(LocalDate.now())) {
+                return new ResponseEntity("Entry is already started.", HttpStatus.BAD_REQUEST);
+            }
             if (entry.getBlockList() != null) {
                 entry.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
             }
+            int totalNumber = calculateBlockNumber(entry);
             entry.setBlockList(blockService.autoGenerate(entry, totalNumber));
-            EntryDto entryDto1 = entryMapper.getEntryDtoFrom(entryService.editEntry(entry));
-            return new ResponseEntity<>(entryDto1, HttpStatus.OK);
+            entryDto = entryMapper.getEntryDtoFrom(entryService.editEntry(entry));
+            return new ResponseEntity<>(entryDto, HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            logger.error(pe.getMessage());
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries", method = RequestMethod.GET)
     public ResponseEntity<?> getEntryList() {
+        logger.debug("'Get entries' request is received.");
         try {
             List<Entry> entryList = entryService.getEntryList();
             List<EntryDto> entryDtoList = entryMapper.getEntryDtoListFrom(entryList);
             return new ResponseEntity<>(entryDtoList, HttpStatus.OK);
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

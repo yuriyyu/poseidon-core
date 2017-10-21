@@ -4,6 +4,7 @@ import edu.mum.se.poseidon.core.controllers.PoseidonException;
 import edu.mum.se.poseidon.core.repositories.EntryRepository;
 import edu.mum.se.poseidon.core.repositories.models.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ public class EntryService {
     public void deleteEntry(Long id) throws PoseidonException {
         Entry entry = entryRepository.findOne(id);
         if (entry == null) {
-            throw new PoseidonException("Entry is not found with this id.");
+            throw new PoseidonException("Entry is not found with this id.", HttpStatus.NOT_FOUND);
         } else {
             entry.setDeleted(true);
             entryRepository.save(entry);
@@ -46,20 +47,20 @@ public class EntryService {
     }
 
     public Entry editEntry(Entry entry) throws PoseidonException {
-        Entry entry1 = entryRepository.findOne(entry.getId());
-        if (entry1 == null) {
-            throw new PoseidonException("Entry is not found with this id.");
+        Entry retVal = entryRepository.findOne(entry.getId());
+        if (retVal == null) {
+            throw new PoseidonException("Entry is not found with this id.", HttpStatus.NOT_FOUND);
         } else {
-            entry1.setStartDate(entry.getStartDate());
-            entry1.setnFppStudents(entry.getnFppStudents());
-            entry1.setnMppStudents(entry.getnMppStudents());
-            entry1.setnFppOpt(entry.getnFppOpt());
-            entry1.setnMppOpt(entry.getnMppOpt());
-            entry1.setUsRes(entry.getUsRes());
-            entry1.setName(entry.getName());
-            entry1.setBlockList(entry.getBlockList());
-            entryRepository.save(entry);
-            return entry1;
+            retVal.setStartDate(entry.getStartDate());
+            retVal.setnFppStudents(entry.getnFppStudents());
+            retVal.setnMppStudents(entry.getnMppStudents());
+            retVal.setnFppOpt(entry.getnFppOpt());
+            retVal.setnMppOpt(entry.getnMppOpt());
+            retVal.setUsRes(entry.getUsRes());
+            retVal.setName(entry.getName());
+            retVal.setBlockList(entry.getBlockList());
+            retVal = entryRepository.save(entry);
+            return retVal;
         }
     }
 }
