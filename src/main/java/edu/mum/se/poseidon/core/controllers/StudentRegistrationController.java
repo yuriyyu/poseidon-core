@@ -21,7 +21,7 @@ import java.util.List;
 public class StudentRegistrationController {
 
     private RegistrationImpl registrationImpl;
-    private static final Logger log = LoggerFactory.getLogger(AdminEntryController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdminEntryController.class);
     private SectionMapper sectionMapper;
 
     public StudentRegistrationController(RegistrationImpl registrationImpl, SectionMapper sectionMapper) {
@@ -32,29 +32,30 @@ public class StudentRegistrationController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/student/{studentId}/section/available", method = RequestMethod.GET)
     public ResponseEntity<?> getAvailableSections(@PathVariable(name = "studentId") long studentId) {
+        logger.debug("'getAvailableSections' request is received. StudentId=" + studentId);
         try {
             List<Section> sectionList = registrationImpl.getAvailableSections(studentId);
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity(sectionDtoList, HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            logger.error(pe.getMessage(), pe);
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(path = "/student/{studentId}/section/registrated", method = RequestMethod.GET)
+    @RequestMapping(path = "/student/{studentId}/section/registered", method = RequestMethod.GET)
     public ResponseEntity<?> getRegisteredSectionByStudent(@PathVariable(name = "studentId") long studentId) {
         try {
             List<Section> sectionList = registrationImpl.getRegisteredSectionByStudent(studentId);
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity(sectionDtoList, HttpStatus.OK);
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -66,11 +67,11 @@ public class StudentRegistrationController {
             registrationImpl.registerToSection(studentId, sectionId);
             return new ResponseEntity(new SectionDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.CONFLICT);
+            logger.error(pe.getMessage(), pe);
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

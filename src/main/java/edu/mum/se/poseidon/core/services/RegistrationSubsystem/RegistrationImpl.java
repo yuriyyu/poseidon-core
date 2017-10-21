@@ -6,6 +6,7 @@ import edu.mum.se.poseidon.core.repositories.models.*;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,11 +36,14 @@ public class RegistrationImpl implements IRegistration {
     public void registerToSection(Long studentId, Long sectionId) throws PoseidonException {
         Section section = sectionRepository.findOne(sectionId);
         if (section == null) {
-            throw new PoseidonException("Section is not found with this Id.");
+            throw new PoseidonException("Section is not found.", HttpStatus.NOT_FOUND);
         }
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
-            throw new PoseidonException("Student is not found with this Id.");
+            throw new PoseidonException("Student is not found.", HttpStatus.NOT_FOUND);
+        }
+        if (section.getStudentSections().size() > section.getMaxSeats()) {
+            throw new PoseidonException("Seat is not available.", HttpStatus.BAD_REQUEST);
         }
         StudentSection ss = new StudentSection();
         ss.setPassed(false);
