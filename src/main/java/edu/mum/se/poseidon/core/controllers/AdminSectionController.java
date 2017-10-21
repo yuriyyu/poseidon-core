@@ -41,18 +41,21 @@ public class AdminSectionController {
         logger.debug("'Delete section' request is received. Section ID=" + id);
         try {
             Section section = sectionService.getSection(id);
-            if (section != null && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
-                FailResponseWrapper failResponse = new FailResponseWrapper("Section is already started.");
-                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            if (section == null) {
+                return new ResponseEntity("Section is not found.", HttpStatus.NOT_FOUND);
+            }
+            if (section.getBlock() != null && section.getBlock().getStartDate() != null
+                    && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
+                return new ResponseEntity("Section is already started.", HttpStatus.BAD_REQUEST);
             }
             sectionService.deleteSection(id);
             return new ResponseEntity(new SectionDto(), HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            logger.error(pe.getMessage(), pe);
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -62,10 +65,13 @@ public class AdminSectionController {
         logger.debug("'Get section' request is received. section ID=" + id);
         try {
             SectionDto sectionDto = sectionMapper.getSectionDtoFrom(sectionService.getSection(id));
+            if (sectionDto == null) {
+                return new ResponseEntity("Section is not found.", HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(sectionDto, HttpStatus.OK);
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,31 +81,39 @@ public class AdminSectionController {
         logger.debug("'Edit section' request is received. section ID=" + sectionDto.getId());
         try {
             Section section = sectionMapper.getSectionFrom(sectionDto);
-            if (section != null && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
-                FailResponseWrapper failResponse = new FailResponseWrapper("Section is already started.");
-                return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            if (section == null) {
+                return new ResponseEntity("Section cannot be null", HttpStatus.BAD_REQUEST);
             }
-            SectionDto sectionDto1 = sectionMapper.getSectionDtoFrom(sectionService.editSection(section));
-            return new ResponseEntity<>(sectionDto1, HttpStatus.OK);
+            section = sectionService.getSection(sectionDto.getId());
+            if (section == null) {
+                return new ResponseEntity("Section is not found.", HttpStatus.NOT_FOUND);
+            }
+            if (section.getBlock() != null && section.getBlock().getStartDate() != null
+                    && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
+                return new ResponseEntity("Section is already started.", HttpStatus.BAD_REQUEST);
+            }
+            sectionDto = sectionMapper.getSectionDtoFrom(sectionService.editSection(section));
+            return new ResponseEntity<>(sectionDto, HttpStatus.OK);
         } catch (PoseidonException pe) {
-            FailResponseWrapper failResponse = new FailResponseWrapper(pe.getMessage());
-            return new ResponseEntity(failResponse, HttpStatus.BAD_REQUEST);
+            logger.error(pe.getMessage(), pe);
+            return new ResponseEntity(pe.getMessage(), pe.getHttpStatus());
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections", method = RequestMethod.GET)
     public ResponseEntity<?> getSectionList() {
+        logger.debug("'Get sections' request is received.");
         try {
             List<Section> sectionList = sectionService.getSectionList();
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity<>(sectionDtoList, HttpStatus.OK);
         } catch (Exception e) {
-            ErrorResponseWrapper errorResponseWrapper = new ErrorResponseWrapper("Failed to execute a request.");
-            return new ResponseEntity(errorResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error(PoseidonException.FAIL_MESSAGE, e);
+            return new ResponseEntity(PoseidonException.FAIL_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

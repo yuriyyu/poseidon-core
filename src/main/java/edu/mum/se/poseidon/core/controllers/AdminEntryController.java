@@ -45,10 +45,10 @@ public class AdminEntryController {
         logger.debug("'Create entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
-            if (entry.getStartDate().isBefore(LocalDate.now())) {
+            if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
                 return new ResponseEntity("Start date is invalid.", HttpStatus.BAD_REQUEST);
             }
-            if (entryService.getEntryByStartDate(entry.getStartDate()) != null) {
+            if (entry.getStartDate() != null && entryService.getEntryByStartDate(entry.getStartDate()) != null) {
                 return new ResponseEntity("Entry is already exist with that date.", HttpStatus.CONFLICT);
             }
             // for generate id in this entry
@@ -75,7 +75,7 @@ public class AdminEntryController {
             if (entry == null) {
                 return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
             }
-            if (entry.getStartDate().isBefore(LocalDate.now())) {
+            if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
                 return new ResponseEntity("Entry is already started.", HttpStatus.BAD_REQUEST);
             }
             if (entry.getBlockList() != null) {
@@ -117,14 +117,14 @@ public class AdminEntryController {
             if (entry == null) {
                 return new ResponseEntity("Entry cannot be null.", HttpStatus.BAD_REQUEST);
             }
-            if (entry.getStartDate().isBefore(LocalDate.now())) {
+            if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
                 return new ResponseEntity("Date is invalid.", HttpStatus.BAD_REQUEST);
             }
             entry = entryService.getEntry(entryDto.getId());
             if (entry == null) {
                 return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
             }
-            if (entry.getStartDate().isBefore(LocalDate.now())) {
+            if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
                 return new ResponseEntity("Entry is already started.", HttpStatus.BAD_REQUEST);
             }
             if (entry.getBlockList() != null) {
