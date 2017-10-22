@@ -6,11 +6,11 @@ import edu.mum.se.poseidon.core.controllers.mapper.BlockMapper;
 import edu.mum.se.poseidon.core.controllers.mapper.SectionMapper;
 import edu.mum.se.poseidon.core.repositories.*;
 import edu.mum.se.poseidon.core.repositories.models.*;
+import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.services.Schedule.BlockTrack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +23,7 @@ public class ScheduleService {
     private final int SCI_NUMBER = 500;
     private final int FPP_NUMBER = 390;
     private final int MPP_NUMBER = 401;
+    private final String DEFAULT_FACULTY = "UNSTAFF";
 
     private ScheduleRepository scheduleRepository;
     private EntryRepository entryRepository;
@@ -98,6 +99,7 @@ public class ScheduleService {
 
     /**
      * Updates Schedule's status
+     *
      * @param scheduleDto
      * @return Updated Schedule
      */
@@ -125,13 +127,31 @@ public class ScheduleService {
         // Create Section
         // Save Section
         // Assign Section
-        List<Section> mppSections = assignSectionToBlock(map, Track.MPP, SCI_NUMBER);
-//        List<Section> fppSections = assignSectionToBlock(map, Track.FPP, SCI_NUMBER);
-        sectionRepository.save(mppSections);
+        //List<Section> mppSections = assignSectionToBlock(map, Track.MPP, SCI_NUMBER);
+        //List<Section> fppSections = assignSectionToBlock(map, Track.FPP, SCI_NUMBER);
+
+        // SCI and FPP - MPP
+        BlockTrack sciBlock = map.get(Track.MPP).get(0);
+        BlockTrack mpp = map.get(Track.MPP).get(1);
+
+        for (int i = 0; i < getNSection(sciBlock.getnStudent()); i++) {
+            assignElectiveToBlock(sciBlock.getBlock(), SCI_NUMBER);
+            assignElectiveToBlock(mpp.getBlock(), MPP_NUMBER);
+        }
+
+        // Elective Block
+        for (BlockTrack b : map.get(Track.MPP).stream().skip(2).collect(Collectors.toList())) {
+            List<Integer> numbers = findElectiveForBlock(b.getnStudent());
+            for (int i = 0; i < numbers.size(); i++) {
+                assignElectiveToBlock(b.getBlock(), numbers.get(i));
+            }
+        }
 
         // findFaculty
         // addSection to Faculty
         // assignFaculty to Section
+
+
         // save Schedule
         schedule.setName(entry.getName() + " Schedule");
         schedule.setEntry(entry);
@@ -140,11 +160,45 @@ public class ScheduleService {
         return schedule;
     }
 
-    private List<Section> assignSectionToBlock(Map<Track, List<BlockTrack>> map, Track track, int courseNumber) {
-        BlockTrack b = map.get(track).get(0);
-        Course sci = courseRepository.findCourseByNumber(courseNumber);
-        List<Section> sections = new ArrayList();
+    private List<Section> assignElectiveToBlock(Block block, int courseNumber) {
 
+        Course course = courseRepository.findCourseByNumber(courseNumber);
+        Faculty unstaffed = facultyRepository.findByFirstNameEquals(DEFAULT_FACULTY);
+
+        List<Section> sections = new ArrayList<>();
+        Section section = new Section();
+        section.setMaxSeats(DEFAULT_MAX_SEAT);
+        section.setCourse(course);
+        section.setLocation("UNASSIGNED");
+        section.setBlock(block);
+
+        // set to unstaffed
+        section.setFaculty(unstaffed);
+        sections.add(section);
+
+        // saves sections to block
+        block.setSectionList(sections);
+        blockRepository.save(block);
+
+        // saves Sections
+        sectionRepository.save(section);
+        return sections;
+    }
+
+    // TODO: Degree of freedom
+    private List<Integer> findElectiveForBlock(int nStudent) {
+        int s = getNSection(nStudent);
+        return courseRepository
+                .findAllByDeleted(false)
+                .parallelStream().limit(s)
+                .map(x -> x.getNumber())
+                .collect(Collectors.toList());
+    }
+
+    private List<Section> assignSectionToBlock(BlockTrack b, int courseNumber) {
+        Course sci = courseRepository.findCourseByNumber(courseNumber);
+        Faculty unstaffed = facultyRepository.findByFirstNameEquals(DEFAULT_FACULTY);
+        List<Section> sections = new ArrayList();
         int s = getNSection(b.getnStudent());
 
         for (int i = 0; i < s; i++) {
@@ -154,6 +208,8 @@ public class ScheduleService {
             section.setLocation("Location-" + i);
             section.setBlock(b.getBlock());
 
+            // set to unstaffed
+            section.setFaculty(unstaffed);
             b.addSection(section);
             sections.add(section);
         }

@@ -6,8 +6,8 @@ INSERT INTO admins (id) VALUES ((SELECT id FROM users WHERE first_name='COMPRO' 
 INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'Stu', 'Dent', 'password', 'student', 'student');
 INSERT INTO students (id, entry_id) VALUES ((SELECT id FROM users WHERE first_name='Stu' and last_name='Dent'), 1);
 
-INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'Facul', 'Ty', 'password', 'faculty', 'faculty');
-INSERT INTO faculties (id) VALUES ((SELECT id FROM users WHERE first_name='Facul' and last_name='Ty'));
+INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'UNSTAFF', 'ED', 'password', 'faculty', 'faculty');
+INSERT INTO faculties (id) VALUES ((SELECT id FROM users WHERE first_name='UNSTAFF' and last_name='ED'));
 
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 390,'Fundamental Programming Practices: Modern Programming Methods and Systems ');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 401,'Modern Programming Practices: Current Concepts and Best Practices in Software Development ');
@@ -41,5 +41,7 @@ INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now()
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 500,'Science of creative intelligence');
 
 INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, entry_id) VALUES (now(), FALSE, now(), '2017-12-01', '2017-11-01', '2017-Nov', 1);
+INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, entry_id) VALUES (now(), FALSE, now(), '2017-12-30', '2017-12-04', '2017-Dec', 1);
+INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, entry_id) VALUES (now(), FALSE, now(), '2018-01-01', '2018-01-02', '2018-Jan', 1);
 
-INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, end_date, location, max_seats, start_date, faculty_id, course_id) VALUES (now(), FALSE, now(), 1, '2017-12-01', 'mclaugh room 102', 25, '2017-11-01', 3, 1);
+--INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, end_date, location, max_seats, start_date, faculty_id, course_id) VALUES (now(), FALSE, now(), 1, '2017-12-01', 'mclaugh room 102', 25, '2017-11-01', 3, 1);
