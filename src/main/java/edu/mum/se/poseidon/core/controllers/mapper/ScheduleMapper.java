@@ -9,7 +9,9 @@ import javafx.concurrent.Worker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,14 +19,8 @@ import java.util.stream.Collectors;
 @Component
 public class ScheduleMapper {
 
-    private SectionMapper sectionMapper;
-    private BlockMapper blockMapper;
-
     @Autowired
-    public ScheduleMapper(SectionMapper sectionMapper, BlockMapper blockMapper) {
-        this.sectionMapper = sectionMapper;
-        this.blockMapper = blockMapper;
-    }
+    private SectionMapper sectionMapper;
 
     public ScheduleDto getScheduleDto(Schedule schedule) {
         if (schedule == null)
@@ -34,12 +30,10 @@ public class ScheduleMapper {
         dto.setName(schedule.getName());
         dto.setId(schedule.getId());
         dto.setStatus(schedule.getStatus());
-
-        if (schedule.getSections() != null && schedule.getSections().size() != 0)
-            dto.setSections(schedule.getSections()
-                    .stream()
-                    .map(x -> sectionMapper.getSectionDtoFrom(x))
-                    .collect(Collectors.toList()));
+        dto.setSections(schedule.getSections()
+                .stream()
+                .map(x -> sectionMapper.getSectionDtoFrom(x))
+                .collect(Collectors.toList()));
         return dto;
     }
 
@@ -52,25 +46,23 @@ public class ScheduleMapper {
         schedule.setId(dto.getId());
         schedule.setName(dto.getName());
         schedule.setStatus(dto.getStatus());
-
-        if (dto.getSections() != null && dto.getSections().size() != 0)
-            schedule.setSections(dto.getSections()
-                    .stream()
-                    .map(x -> sectionMapper.getSectionFrom(x))
-                    .collect(Collectors.toList()));
+        schedule.setSections(dto.getSections()
+                .stream()
+                .map(x -> sectionMapper.getSectionFrom(x))
+                .collect(Collectors.toList()));
 
         return schedule;
     }
 
-    public ScheduleDto getScheduleDtoByMap(Map<Track, List<BlockTrackDto>> map) {
+    public ScheduleDto getScheduleDtoByMap(Map<Track, List<BlockTrack>> map) {
         ScheduleDto dto = new ScheduleDto();
         dto.setMap(map);
-        return dto;
+        return  dto;
     }
 
     public StudentScheduleDto getStudentScheduleDto(Entry entry, List<StudentSectionDto> studentSectionDtoList) {
         StudentScheduleDto dto = new StudentScheduleDto();
-        if (entry != null) {
+        if(entry != null) {
             dto.setEntryName(entry.getName());
         }
         dto.setStudentSectionDtoList(studentSectionDtoList);
@@ -83,7 +75,7 @@ public class ScheduleMapper {
 
         List<FacultyScheduleDto> scheduleDtoList = new ArrayList<>();
 
-        for (Map.Entry<Long, String> entry : sectionToEntryNameMap.entrySet()) {
+        for(Map.Entry<Long,String> entry : sectionToEntryNameMap.entrySet()) {
             Long sectionId = entry.getKey();
             String entryName = entry.getValue();
             List<FacultySectionDto> list = facultySectionDtoMap.get(sectionId);
@@ -107,24 +99,6 @@ public class ScheduleMapper {
         dto.setEntryName(name);
         dto.setAdminSectionDtoList(list);
 
-        return dto;
-    }
-
-    public ScheduleDto getScheduleDtoFromMap(Map<Track, List<BlockTrack>> map) {
-        ScheduleDto dto = new ScheduleDto();
-        Map<Track, List<BlockTrackDto>> m = new HashMap<>();
-
-        // Convert BlockTrack to BlockTrackDto
-        for (Track t : map.keySet()) {
-            List<BlockTrackDto> btdto = map.get(t)
-                    .stream()
-                    .map(x -> blockMapper.getBlockTrackDto(x))
-                    .collect(Collectors.toList());
-
-            m.put(t, btdto);
-        }
-
-        dto.setMap(m);
         return dto;
     }
 }
