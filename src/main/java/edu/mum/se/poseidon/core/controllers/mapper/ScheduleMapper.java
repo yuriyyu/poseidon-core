@@ -5,7 +5,6 @@ import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
 import edu.mum.se.poseidon.core.repositories.models.Track;
 import edu.mum.se.poseidon.core.services.Schedule.BlockTrack;
-import javafx.concurrent.Worker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

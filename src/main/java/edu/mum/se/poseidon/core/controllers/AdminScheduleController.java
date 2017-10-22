@@ -47,18 +47,17 @@ public class AdminScheduleController {
     }
 
     @RequestMapping(path = "/schedules/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getSchedule(@PathVariable long id){
+    public ResponseEntity<?> getSchedule(@PathVariable long id) {
         Schedule s = scheduleService.getScheduleById(id);
         ScheduleDto dto = scheduleMapper.getScheduleDto(s);
-        return  new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/schedules/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable long id) {
+    public ResponseEntity<?> delete(@PathVariable long id) {
         scheduleService.deleteSchedule(id);
         return new ResponseEntity<>(new ScheduleDto(), HttpStatus.OK);
     }
-
 
     @RequestMapping(path = "/schedules/create", method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody ScheduleDto scheduleDto) {
@@ -76,9 +75,9 @@ public class AdminScheduleController {
 
     @RequestMapping(path = "/schedules/generate", method = RequestMethod.POST)
     public ResponseEntity<?> generate(@RequestBody ScheduleGenerateDto dto) {
-        Map<Track, List<BlockTrack>> schedule = this.scheduleService.generate(dto);
-//        ScheduleDto scheduleDto = this.scheduleMapper.getScheduleDto(schedule);
-        ScheduleDto scheduleDto = this.scheduleMapper.getScheduleDtoByMap(schedule);
-        return new ResponseEntity<>(scheduleDto, HttpStatus.OK);
+        //Map<Track, List<BlockTrack>> schedule = this.scheduleService.generate(dto);
+        Schedule schedule = this.scheduleService.generate(dto);
+        //ScheduleDto scheduleDto = this.scheduleMapper.getScheduleDto(schedule);
+        return new ResponseEntity<>(new ScheduleDto(), HttpStatus.OK);
     }
 }
