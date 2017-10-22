@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 public class ScheduleDto {
+
     private Long id;
     private String name;
     private int status;
     private List<SectionDto> sections;
-    private Map<Track, List<BlockTrack>> map;
+    private Map<Track, List<BlockTrackDto>> map;
 
-    public Map<Track, List<BlockTrack>> getMap() {
+    public Map<Track, List<BlockTrackDto>> getMap() {
         return map;
     }
 
-    public void setMap(Map<Track, List<BlockTrack>> map) {
+    public void setMap(Map<Track, List<BlockTrackDto>> map) {
         this.map = map;
     }
 

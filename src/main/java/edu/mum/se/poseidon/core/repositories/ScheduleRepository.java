@@ -10,5 +10,6 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     Schedule findByEntry(Entry entry);
+
     List<Schedule> findAllByDeleted(boolean isDeleted);
 }

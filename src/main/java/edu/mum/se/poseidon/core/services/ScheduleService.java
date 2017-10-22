@@ -96,19 +96,25 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
     }
 
+    /**
+     * Updates Schedule's status
+     * @param scheduleDto
+     * @return Updated Schedule
+     */
     public Schedule editSchedule(ScheduleDto scheduleDto) {
         Schedule schedule = scheduleRepository.findOne(scheduleDto.getId());
+
         schedule.setStatus(scheduleDto.getStatus());
-        schedule.setName(scheduleDto.getName());
 
         // saves changes
         scheduleRepository.save(schedule);
         return schedule;
     }
 
-    public Map<Track, List<BlockTrack>> generate(ScheduleGenerateDto dto) {
+    public Schedule generate(ScheduleGenerateDto dto) {
 
         Schedule schedule = new Schedule();
+
         Entry entry = entryRepository.findOne(dto.getEntryId());
         List<Course> courses = courseRepository.findAllByDeleted(false);
         List<Block> blocks = getSortedBlocks(entry);
@@ -119,21 +125,25 @@ public class ScheduleService {
         // Create Section
         // Save Section
         // Assign Section
-        assignSectionToBlock(map, Track.MPP, SCI_NUMBER);
-        assignSectionToBlock(map, Track.FPP, SCI_NUMBER);
+        List<Section> mppSections = assignSectionToBlock(map, Track.MPP, SCI_NUMBER);
+//        List<Section> fppSections = assignSectionToBlock(map, Track.FPP, SCI_NUMBER);
+        sectionRepository.save(mppSections);
 
         // findFaculty
         // addSection to Faculty
         // assignFaculty to Section
         // save Schedule
         schedule.setName(entry.getName() + " Schedule");
-       // return schedule;
-        return map;
+        schedule.setEntry(entry);
+        scheduleRepository.save(schedule);
+        // return schedule;
+        return schedule;
     }
 
-    private void assignSectionToBlock(Map<Track, List<BlockTrack>> map, Track track, int courseNumber){
+    private List<Section> assignSectionToBlock(Map<Track, List<BlockTrack>> map, Track track, int courseNumber) {
         BlockTrack b = map.get(track).get(0);
         Course sci = courseRepository.findCourseByNumber(courseNumber);
+        List<Section> sections = new ArrayList();
 
         int s = getNSection(b.getnStudent());
 
@@ -142,11 +152,12 @@ public class ScheduleService {
             section.setMaxSeats(DEFAULT_MAX_SEAT);
             section.setCourse(sci);
             section.setLocation("Location-" + i);
-//            section.setStartDate(LocalDate.parse(b.getBlock().getStartDate()));
-//            section.setEndDate(LocalDate.parse(b.getBlock().getEndDate()));
+            section.setBlock(b.getBlock());
 
-            b.addSection(sectionMapper.getSectionDtoFrom(section));
+            b.addSection(section);
+            sections.add(section);
         }
+        return sections;
     }
 
     private Map<Track, List<BlockTrack>> getBlockTracks(Entry entry) {
@@ -161,7 +172,7 @@ public class ScheduleService {
         return blockRepository.findAllByEntryAndDeleted(entry, false)
                 .stream()
                 .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .map(x -> new BlockTrack(blockMapper.getBlockDto(x), n))
+                .map(x -> new BlockTrack(x, n))
                 .collect(Collectors.toList());
     }
 
@@ -170,7 +181,7 @@ public class ScheduleService {
         return blockRepository.findAllByEntryAndDeleted(entry, false)
                 .stream()
                 .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .map(x -> new BlockTrack(blockMapper.getBlockDto(x), n))
+                .map(x -> new BlockTrack(x, n))
                 .collect(Collectors.toList());
     }
 
@@ -199,7 +210,7 @@ public class ScheduleService {
         return blockRepository.findAllByEntryAndDeleted(entry, false)
                 .stream()
                 .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .map(x -> new BlockTrack(blockMapper.getBlockDto(x), getTotalStudents(entry)))
+                .map(x -> new BlockTrack(x, getTotalStudents(entry)))
                 .collect(Collectors.toList());
     }
 }
