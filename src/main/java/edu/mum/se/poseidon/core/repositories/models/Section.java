@@ -89,4 +89,7 @@ public class Section
         this.schedule = schedule;
     }
 
+    public String getName() {
+        return course == null ? "NONE" : course.getName();
+    }
 }
