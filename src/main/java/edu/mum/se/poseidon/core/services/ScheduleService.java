@@ -166,6 +166,7 @@ public class ScheduleService {
         // save Schedule
         schedule.setName(entry.getName() + " Schedule");
         schedule.setEntry(entry);
+        schedule.setSections(mppSections);
         scheduleRepository.save(schedule);
 
         return schedule;
