@@ -38,14 +38,16 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections/delete/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteSection(@PathVariable(name = "id") long id) {
-        logger.debug("'Delete section' request is received. Section ID=" + id);
+        logger.info("'Delete section' request is received. Section ID=" + id);
         try {
             Section section = sectionService.getSection(id);
             if (section == null) {
+                logger.info("Section is not found.");
                 return new ResponseEntity("Section is not found.", HttpStatus.NOT_FOUND);
             }
             if (section.getBlock() != null && section.getBlock().getStartDate() != null
                     && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
+                logger.info("Section is already started.");
                 return new ResponseEntity("Section is already started.", HttpStatus.BAD_REQUEST);
             }
             sectionService.deleteSection(id);
@@ -62,10 +64,11 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getSection(@PathVariable long id) {
-        logger.debug("'Get section' request is received. section ID=" + id);
+        logger.info("'Get section' request is received. section ID=" + id);
         try {
             SectionDto sectionDto = sectionMapper.getSectionDtoFrom(sectionService.getSection(id));
             if (sectionDto == null) {
+                logger.info("Section is not found.");
                 return new ResponseEntity("Section is not found.", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(sectionDto, HttpStatus.OK);
@@ -78,18 +81,21 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editSection(@RequestBody SectionDto sectionDto) {
-        logger.debug("'Edit section' request is received. section ID=" + sectionDto.getId());
+        logger.info("'Edit section' request is received. section ID=" + sectionDto.getId());
         try {
             Section section = sectionMapper.getSectionFrom(sectionDto);
             if (section == null) {
+                logger.info("Section cannot be null");
                 return new ResponseEntity("Section cannot be null", HttpStatus.BAD_REQUEST);
             }
-            section = sectionService.getSection(sectionDto.getId());
-            if (section == null) {
+            Section sectionExist = sectionService.getSection(sectionDto.getId());
+            if (sectionExist == null) {
+                logger.info("Section is not found.");
                 return new ResponseEntity("Section is not found.", HttpStatus.NOT_FOUND);
             }
-            if (section.getBlock() != null && section.getBlock().getStartDate() != null
-                    && section.getBlock().getStartDate().isBefore(LocalDate.now())) {
+            if (sectionExist.getBlock() != null && sectionExist.getBlock().getStartDate() != null
+                    && sectionExist.getBlock().getStartDate().isBefore(LocalDate.now())) {
+                logger.info("Section is already started.");
                 return new ResponseEntity("Section is already started.", HttpStatus.BAD_REQUEST);
             }
             sectionDto = sectionMapper.getSectionDtoFrom(sectionService.editSection(section));
@@ -106,7 +112,7 @@ public class AdminSectionController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/sections", method = RequestMethod.GET)
     public ResponseEntity<?> getSectionList() {
-        logger.debug("'Get sections' request is received.");
+        logger.info("'Get sections' request is received.");
         try {
             List<Section> sectionList = sectionService.getSectionList();
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);

@@ -35,37 +35,65 @@ public class AdminCourseController {
 	
 	@RequestMapping(path="/courses/create", method = RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody CourseDto courseDto) {
-		Course course = courseService.createCourse(courseDto);
-		CourseDto dto = courseMapper.getCourseDto(course);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		try {
+			Course course = courseService.createCourse(courseDto);
+			CourseDto dto = courseMapper.getCourseDto(course);
+			return new ResponseEntity<>(dto, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@RequestMapping(path="/courses/edit", method = RequestMethod.POST)
 	public ResponseEntity<?> edit(@RequestBody CourseDto courseDto) {
-		Course course = this.courseService.editCourse(courseDto);
-		CourseDto dto = courseMapper.getCourseDto(course);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		try {
+			Course course = this.courseService.editCourse(courseDto);
+			CourseDto dto = courseMapper.getCourseDto(course);
+			return new ResponseEntity<>(dto, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@RequestMapping(path="/courses/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getCourse(@PathVariable long id){
-		Course course = courseService.getCourse(id);
-		CourseDto dto = courseMapper.getCourseDto(course);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
+		try {
+			Course course = courseService.getCourse(id);
+			CourseDto dto = courseMapper.getCourseDto(course);
+			return new ResponseEntity<>(dto, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@RequestMapping(path="/courses", method = RequestMethod.GET)
 	public ResponseEntity<?> getCourseList(){
-		List<Course> courses = courseService.getCourseList();
-		List<CourseDto> dtos = courses.stream()
-				.map(c -> courseMapper.getCourseDto(c))
-				.collect(Collectors.toList());
-		return new ResponseEntity<>(dtos, HttpStatus.OK);
+		try {
+			List<Course> courses = courseService.getCourseList();
+			List<CourseDto> dtos = courses.stream()
+					.map(c -> courseMapper.getCourseDto(c))
+					.collect(Collectors.toList());
+			return new ResponseEntity<>(dtos, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@RequestMapping(path="/courses/{id}/delete", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteCourse(@PathVariable long id){
-		courseService.deleteCourse(id);
-		return new ResponseEntity<>(new CourseDto(), HttpStatus.OK);
+		try {
+			courseService.deleteCourse(id);
+			return new ResponseEntity<>(new CourseDto(), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 }
