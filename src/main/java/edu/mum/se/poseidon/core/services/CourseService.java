@@ -34,6 +34,11 @@ public class CourseService {
 	}
 	
 	public Course createCourse(CourseDto courseDto) {
+		Course c = courseRepository.findCourseByNumber(courseDto.getNumber());
+		if(c != null) {
+			throw new RuntimeException("The course exists!");
+		}
+		
 		Course course = new Course();
 		course.setName(courseDto.getName());
 		course.setNumber(courseDto.getNumber());
@@ -53,6 +58,11 @@ public class CourseService {
 	
 	public Course editCourse(CourseDto courseDto) {
 		Course course = courseRepository.findOne(courseDto.getId());
+		Course c = courseRepository.findCourseByNumber(courseDto.getNumber());
+		if(c != null && c.getId() != course.getId()) {
+			throw new RuntimeException("The course number conflicts other course number!");
+		}
+		
 		for(Faculty f: course.getFaculties()) {
 			f.getCourses().remove(course);
 			facultyRepository.save(f);

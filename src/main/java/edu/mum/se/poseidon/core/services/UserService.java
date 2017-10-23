@@ -58,6 +58,12 @@ public class UserService {
     
     public User createUser(UserDto userDto) {
     	
+    	User user = userRepository.findUserByUsername(userDto.getUsername());
+    	
+    	if(user != null) {
+    		throw new RuntimeException("The user exists!");
+    	}
+    	
     	if(userDto.getType().equals("student")) {
     		Student student = new Student();
     		student.setFirstName(userDto.getFirstName());
@@ -94,6 +100,11 @@ public class UserService {
     
     public User editUser(UserDto userDto) {
     	User user = userRepository.findOne(userDto.getId());
+    	User u = userRepository.findUserByUsername(userDto.getUsername());
+    	if(u != null && u.getId() != user.getId()) {
+    		throw new RuntimeException("The username conflicts with other user's username!");
+    	}
+    	
     	user.setFirstName(userDto.getFirstName());
     	user.setLastName(userDto.getLastName());
     	user.setUsername(userDto.getUsername());
