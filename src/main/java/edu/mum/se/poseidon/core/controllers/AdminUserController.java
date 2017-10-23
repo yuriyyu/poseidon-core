@@ -33,37 +33,62 @@ public class AdminUserController {
 	
 	@RequestMapping(path="/users/create", method = RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody UserDto userDto) {
-		User user = this.userService.createUser(userDto);
-		UserDto udo = userMapper.getUserDto(user);
-		return new ResponseEntity<>(udo, HttpStatus.OK);
+		try {
+			User user = this.userService.createUser(userDto);
+			UserDto udo = userMapper.getUserDto(user);
+			return new ResponseEntity<>(udo, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 	
 	@RequestMapping(path="/users/edit", method = RequestMethod.POST)
 	public ResponseEntity<?> edit(@RequestBody UserDto userDto) {
-		User user = this.userService.editUser(userDto);
-		UserDto udo = userMapper.getUserDto(user);
-		return new ResponseEntity<>(udo, HttpStatus.OK);
+		try {
+			User user = this.userService.editUser(userDto);
+			UserDto udo = userMapper.getUserDto(user);
+			return new ResponseEntity<>(udo, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 	
 	@RequestMapping(path="/users/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@PathVariable long id){
-		User user = userService.getUser(id);
-		UserDto udo = userMapper.getUserDto(user);
-		return new ResponseEntity<>(udo, HttpStatus.OK);
+		try {
+			User user = userService.getUser(id);
+			UserDto udo = userMapper.getUserDto(user);
+			return new ResponseEntity<>(udo, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(path="/users", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserList(){
-		List<User> users = userService.getUserList();
-		List<UserDto> dtos = users.stream()
-				.map(u -> userMapper.getUserDto(u))
-				.collect(Collectors.toList());
-		return new ResponseEntity<>(dtos, HttpStatus.OK);
+		try {
+			List<User> users = userService.getUserList();
+			List<UserDto> dtos = users.stream()
+					.map(u -> userMapper.getUserDto(u))
+					.collect(Collectors.toList());
+			return new ResponseEntity<>(dtos, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(path="/users/{id}/delete", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteUser(@PathVariable long id){
-		userService.deleteUser(id);
-		return new ResponseEntity<>(new UserDto(), HttpStatus.OK);
+		try {
+			userService.deleteUser(id);
+			return new ResponseEntity<>(new UserDto(), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 }

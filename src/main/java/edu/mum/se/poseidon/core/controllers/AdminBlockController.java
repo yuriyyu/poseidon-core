@@ -31,37 +31,62 @@ public class AdminBlockController {
 	
 	@RequestMapping(path="/blocks/create", method = RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody BlockDto blockDto) {
-		Block block = this.blockService.createBlock(blockDto);
-		BlockDto bdo = blockMapper.getBlockDto(block);
-		return new ResponseEntity<>(bdo, HttpStatus.OK);
+		try {
+			Block block = this.blockService.createBlock(blockDto);
+			BlockDto bdo = blockMapper.getBlockDto(block);
+			return new ResponseEntity<>(bdo, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(path="/blocks/edit", method = RequestMethod.POST)
 	public ResponseEntity<?> edit(@RequestBody BlockDto blockDto) {
-		Block block = this.blockService.editBlock(blockDto);
-		BlockDto bdo = blockMapper.getBlockDto(block);
-		return new ResponseEntity<>(bdo, HttpStatus.OK);
+		try {
+			Block block = this.blockService.editBlock(blockDto);
+			BlockDto bdo = blockMapper.getBlockDto(block);
+			return new ResponseEntity<>(bdo, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(path="/blocks/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getBlock(@PathVariable long id){
-		Block block = blockService.getBlock(id);
-		BlockDto bdo = blockMapper.getBlockDto(block);
-		return new ResponseEntity<>(bdo, HttpStatus.OK);
+		try {
+			Block block = blockService.getBlock(id);
+			BlockDto bdo = blockMapper.getBlockDto(block);
+			return new ResponseEntity<>(bdo, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(path="/blocks", method = RequestMethod.GET)
 	public ResponseEntity<?> getBlockList(){
-		List<Block> blocks = blockService.getBlockList();
-		List<BlockDto> dtos = blocks.stream()
-				.map(b -> blockMapper.getBlockDto(b))
-				.collect(Collectors.toList());
-		return new ResponseEntity<>(dtos, HttpStatus.OK);
+		try {
+			List<Block> blocks = blockService.getBlockList();
+			List<BlockDto> dtos = blocks.stream()
+					.map(b -> blockMapper.getBlockDto(b))
+					.collect(Collectors.toList());
+			return new ResponseEntity<>(dtos, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(path="/blocks/{id}/delete", method = RequestMethod.GET)
 	public ResponseEntity<?> deleteBlock(@PathVariable long id){
-		blockService.deleteBlock(id);
-		return new ResponseEntity<>(new BlockDto(), HttpStatus.OK);
+		try {
+			blockService.deleteBlock(id);
+			return new ResponseEntity<>(new BlockDto(), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 }

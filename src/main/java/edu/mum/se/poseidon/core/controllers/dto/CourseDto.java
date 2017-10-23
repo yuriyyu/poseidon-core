@@ -9,7 +9,7 @@ public class CourseDto {
 	private String name;
     private Integer number;
     
-    private List<PrerequisiteDto> prerequisites = new ArrayList<>();
+	private List<PrerequisiteDto> prerequisites = new ArrayList<>();
     private List<FacultyDto> faculties = new ArrayList<>();
     
     public Long getId() {

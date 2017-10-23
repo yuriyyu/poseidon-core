@@ -41,7 +41,7 @@ public class AdminCourseController {
 			return new ResponseEntity<>(dto, HttpStatus.OK);
 		}
 		catch(Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 		}
 		
 	}
@@ -54,7 +54,7 @@ public class AdminCourseController {
 			return new ResponseEntity<>(dto, HttpStatus.OK);
 		}
 		catch(Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class AdminCourseController {
 			return new ResponseEntity<>(dto, HttpStatus.OK);
 		}
 		catch(Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		
 	}
@@ -81,7 +81,7 @@ public class AdminCourseController {
 			return new ResponseEntity<>(dtos, HttpStatus.OK);
 		}
 		catch(Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		
 	}

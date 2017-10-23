@@ -53,7 +53,7 @@ public class ScheduleMapper {
         return schedule;
     }
 
-    public ScheduleDto getScheduleDtoByMap(Map<Track, List<BlockTrack>> map) {
+    public ScheduleDto getScheduleDtoByMap(Map<Track, List<BlockTrackDto>> map) {
         ScheduleDto dto = new ScheduleDto();
         dto.setMap(map);
         return  dto;
