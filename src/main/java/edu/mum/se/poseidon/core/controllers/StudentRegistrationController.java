@@ -32,7 +32,7 @@ public class StudentRegistrationController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/student/{studentId}/section/available", method = RequestMethod.GET)
     public ResponseEntity<?> getAvailableSections(@PathVariable(name = "studentId") long studentId) {
-        logger.debug("'getAvailableSections' request is received. StudentId=" + studentId);
+        logger.info("'getAvailableSections' request is received. StudentId=" + studentId);
         try {
             List<Section> sectionList = registrationImpl.getAvailableSections(studentId);
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
@@ -49,6 +49,7 @@ public class StudentRegistrationController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/student/{studentId}/section/registered", method = RequestMethod.GET)
     public ResponseEntity<?> getRegisteredSectionByStudent(@PathVariable(name = "studentId") long studentId) {
+        logger.info("'getRegisteredSectionByStudent' request is received.");
         try {
             List<Section> sectionList = registrationImpl.getRegisteredSectionByStudent(studentId);
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
@@ -63,6 +64,7 @@ public class StudentRegistrationController {
     @RequestMapping(path = "/student/{studentId}/section/{sectionId}", method = RequestMethod.GET)
     public ResponseEntity<?> registerToSection(@PathVariable(name = "studentId") long studentId,
                                                @PathVariable(name = "sectionId") long sectionId) {
+        logger.info("'registerToSection' request is received.");
         try {
             registrationImpl.registerToSection(studentId, sectionId);
             return new ResponseEntity(new SectionDto(), HttpStatus.OK);
