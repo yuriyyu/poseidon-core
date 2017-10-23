@@ -69,13 +69,15 @@ public class AdminEntryController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/delete/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> deleteEntry(@PathVariable(name = "id") long id) {
-        logger.debug("'Delete entry' request is received. Entry ID=" + id);
+        logger.info("'Delete entry' request is received. Entry ID=" + id);
         try {
             Entry entry = entryService.getEntry(id);
             if (entry == null) {
+                logger.info("Entry is not found.");
                 return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
             }
             if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
+                logger.info("Entry is already started.");
                 return new ResponseEntity("Entry is already started.", HttpStatus.BAD_REQUEST);
             }
             if (entry.getBlockList() != null) {
@@ -95,10 +97,11 @@ public class AdminEntryController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getEntry(@PathVariable long id) {
-        logger.debug("'Get entry' request is received. Entry ID=" + id);
+        logger.info("'Get entry' request is received. Entry ID=" + id);
         try {
             EntryDto entryDto = entryMapper.getEntryDtoFrom(entryService.getEntry(id));
             if (entryDto == null) {
+                logger.info("Entry is not found.");
                 return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(entryDto, HttpStatus.OK);
@@ -111,24 +114,28 @@ public class AdminEntryController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editEntry(@RequestBody EntryDto entryDto) {
-        logger.debug("'Edit entry' request is received. Entry name=" + entryDto.getName());
+        logger.info("'Edit entry' request is received. Entry name=" + entryDto.getName());
         try {
             Entry entry = entryMapper.getEntryFrom(entryDto);
             if (entry == null) {
+                logger.info("Entry cannot be null.");
                 return new ResponseEntity("Entry cannot be null.", HttpStatus.BAD_REQUEST);
             }
             if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
+                logger.info("Date is invalid.");
                 return new ResponseEntity("Date is invalid.", HttpStatus.BAD_REQUEST);
             }
-            entry = entryService.getEntry(entryDto.getId());
-            if (entry == null) {
+            Entry entryExist = entryService.getEntry(entryDto.getId());
+            if (entryExist == null) {
+                logger.info("Entry is not found.");
                 return new ResponseEntity("Entry is not found.", HttpStatus.NOT_FOUND);
             }
-            if (entry.getStartDate() != null && entry.getStartDate().isBefore(LocalDate.now())) {
+            if (entryExist.getStartDate() != null && entryExist.getStartDate().isBefore(LocalDate.now())) {
+                logger.info("Entry is already started.");
                 return new ResponseEntity("Entry is already started.", HttpStatus.BAD_REQUEST);
             }
-            if (entry.getBlockList() != null) {
-                entry.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
+            if (entryExist.getBlockList() != null) {
+                entryExist.getBlockList().forEach(b -> blockService.deleteBlock(b.getId()));
             }
             int totalNumber = calculateBlockNumber(entry);
             entry.setBlockList(blockService.autoGenerate(entry, totalNumber));
@@ -146,7 +153,7 @@ public class AdminEntryController {
     @SuppressWarnings("unchecked")
     @RequestMapping(path = "/entries", method = RequestMethod.GET)
     public ResponseEntity<?> getEntryList() {
-        logger.debug("'Get entries' request is received.");
+        logger.info("'Get entries' request is received.");
         try {
             List<Entry> entryList = entryService.getEntryList();
             List<EntryDto> entryDtoList = entryMapper.getEntryDtoListFrom(entryList);
