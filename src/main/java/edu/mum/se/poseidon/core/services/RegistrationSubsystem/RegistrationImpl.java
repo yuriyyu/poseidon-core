@@ -46,9 +46,11 @@ public class RegistrationImpl implements IRegistration {
             throw new PoseidonException("Seat is not available.", HttpStatus.BAD_REQUEST);
         }
         StudentSection ss = new StudentSection();
+        StudentSectionPK sspk = new StudentSectionPK();
+        sspk.setStudent(student);
+        sspk.setSection(section);
         ss.setPassed(false);
-        ss.getId().setSection(section);
-        ss.getId().setStudent(student);
+        ss.setId(sspk);
         section.getStudentSections().add(ss);
         student.getStudentSections().add(ss);
         studentRepository.save(student);

@@ -44,4 +44,10 @@ INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, 
 INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, entry_id) VALUES (now(), FALSE, now(), '2017-12-30', '2017-12-04', '2017-Dec', 1);
 INSERT INTO blocks (dcreated, is_deleted, dupdated, end_date, start_date, name, entry_id) VALUES (now(), FALSE, now(), '2018-01-01', '2018-01-02', '2018-Jan', 1);
 
---INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, end_date, location, max_seats, start_date, faculty_id, course_id) VALUES (now(), FALSE, now(), 1, '2017-12-01', 'mclaugh room 102', 25, '2017-11-01', 3, 1);
+INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, location, max_seats, faculty_id, course_id) VALUES (now(), FALSE, now(), 1, 'mclaugh room 101', 25, 3, 1);
+INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, location, max_seats, faculty_id, course_id) VALUES (now(), FALSE, now(), 1, 'mclaugh room 102', 25, 3, 2);
+INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, location, max_seats, faculty_id, course_id) VALUES (now(), FALSE, now(), 1, 'mclaugh room 103', 25, 3, 3);
+
+INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, location, max_seats, faculty_id, course_id) VALUES (now(), FALSE, now(), 2, 'mclaugh room 104', 25, 3, 1);
+INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, location, max_seats, faculty_id, course_id) VALUES (now(), FALSE, now(), 2, 'mclaugh room 105', 25, 3, 2);
+INSERT INTO sections (dcreated, is_deleted, dupdated, block_id, location, max_seats, faculty_id, course_id) VALUES (now(), FALSE, now(), 2, 'mclaugh room 106', 25, 3, 3);
