@@ -78,25 +78,22 @@ public class RegistrationImpl implements IRegistration {
 
     private List<Section> getSectionForRegister(List<Section> sectionList, List<Section> studentPassedSectionList) {
         List<Section> retVal = new ArrayList<>();
-        // checks that student passed course's pre-requisite
-        // add sections that has no pre-requisites
-        retVal.addAll(sectionList.stream()
-                .filter(s -> courseRepository.findCourseBySectionId(s.getId()).getPrerequisites() == null
-                        && courseRepository.findCourseBySectionId(s.getId()).getPrerequisites().isEmpty())
-                .collect(Collectors.toList()));
-        // add sections that has pre-requisites
         for (Section section : sectionList) {
             Course course = courseRepository.findCourseBySectionId(section.getId());
             List<Course> prerequisiteList = course.getPrerequisites();
-            int count = 0;
-            for (Section studentSection : studentPassedSectionList) {
-                Course studentCourse = courseRepository.findCourseBySectionId(studentSection.getId());
-                if (prerequisiteList.contains(studentCourse)) {
-                    count++;
-                }
-            }
-            if (count == prerequisiteList.size()) {
+            if (prerequisiteList == null || prerequisiteList.isEmpty()) {
                 retVal.add(section);
+            } else {
+                int count = 0;
+                for (Section studentSection : studentPassedSectionList) {
+                    Course studentCourse = courseRepository.findCourseBySectionId(studentSection.getId());
+                    if (prerequisiteList.contains(studentCourse)) {
+                        count++;
+                    }
+                }
+                if (count == prerequisiteList.size()) {
+                    retVal.add(section);
+                }
             }
         }
         return retVal;
