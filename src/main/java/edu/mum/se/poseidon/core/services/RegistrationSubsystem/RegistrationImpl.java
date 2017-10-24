@@ -3,7 +3,6 @@ package edu.mum.se.poseidon.core.services.RegistrationSubsystem;
 import edu.mum.se.poseidon.core.controllers.PoseidonException;
 import edu.mum.se.poseidon.core.repositories.*;
 import edu.mum.se.poseidon.core.repositories.models.*;
-import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RegistrationImpl implements IRegistration {
@@ -19,17 +17,14 @@ public class RegistrationImpl implements IRegistration {
     private StudentRepository studentRepository;
     private SectionRepository sectionRepository;
     private CourseRepository courseRepository;
-    private FacultyRepository facultyRepository;
 
     @Autowired
     public RegistrationImpl(StudentRepository studentRepository,
                             SectionRepository sectionRepository,
-                            CourseRepository courseRepository,
-                            FacultyRepository facultyRepository) {
+                            CourseRepository courseRepository) {
         this.studentRepository = studentRepository;
         this.sectionRepository = sectionRepository;
         this.courseRepository = courseRepository;
-        this.facultyRepository = facultyRepository;
     }
 
     @Override
@@ -63,19 +58,6 @@ public class RegistrationImpl implements IRegistration {
         List<Section> sectionList = sectionRepository.findSectionsByDeleted(false);
         List<Section> studentPassedSectionList = sectionRepository.findSectionsPassedByStudentId(studentId);
         return getSectionForRegister(sectionList, studentPassedSectionList);
-    }
-
-    @Override
-    public List<Section> getRegisteredSectionByStudent(Long studentId) {
-        return sectionRepository.findSectionsByStudentId(studentId);
-    }
-
-    public List<Section> getSectionByFaculty(long facultyId) {
-        Faculty faculty = facultyRepository.findOne(facultyId);
-        if (faculty == null) {
-            throw new RuntimeException("Faculty not found");
-        }
-        return sectionRepository.findByFaculty(faculty);
     }
 
     private List<Section> getSectionForRegister(List<Section> sectionList, List<Section> studentPassedSectionList) {

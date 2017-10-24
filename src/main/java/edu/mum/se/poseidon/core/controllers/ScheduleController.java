@@ -8,8 +8,8 @@ import edu.mum.se.poseidon.core.repositories.models.Entry;
 import edu.mum.se.poseidon.core.repositories.models.Schedule;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 import edu.mum.se.poseidon.core.repositories.models.users.Student;
-import edu.mum.se.poseidon.core.services.RegistrationSubsystem.RegistrationImpl;
 import edu.mum.se.poseidon.core.services.ScheduleService;
+import edu.mum.se.poseidon.core.services.SectionService;
 import edu.mum.se.poseidon.core.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,19 +27,19 @@ import java.util.stream.Collectors;
 @Controller
 public class ScheduleController {
 
-    private RegistrationImpl registrationImpl;
+    private SectionService sectionService;
     private SectionMapper sectionMapper;
     private ScheduleMapper scheduleMapper;
     private StudentService studentService;
     private ScheduleService scheduleService;
 
     @Autowired
-    public ScheduleController(RegistrationImpl registrationImpl,
+    public ScheduleController(SectionService sectionService,
                               ScheduleMapper scheduleMapper,
                               StudentService studentService,
                               ScheduleService scheduleService,
                               SectionMapper sectionMapper) {
-        this.registrationImpl = registrationImpl;
+        this.sectionService = sectionService;
         this.sectionMapper = sectionMapper;
         this.scheduleMapper = scheduleMapper;
         this.studentService = studentService;
@@ -51,7 +50,7 @@ public class ScheduleController {
     @RequestMapping(path = "/students/{studentId}/schedule", method = RequestMethod.GET)
     public ResponseEntity<?> getStudentSchedule(@PathVariable(name = "studentId") long studentId) {
         try {
-            List<Section> sectionList = registrationImpl.getRegisteredSectionByStudent(studentId);
+            List<Section> sectionList = sectionService.getRegisteredSectionByStudent(studentId);
             List<StudentSectionDto> studentSectionDtoList = sectionMapper.getStudentSectionDtoList(sectionList);
 
             Student student = studentService.getStudent(studentId);
@@ -70,7 +69,7 @@ public class ScheduleController {
     @RequestMapping(path = "/faculties/{facultyId}/schedule", method = RequestMethod.GET)
     public ResponseEntity<?> getFacultySchedule(@PathVariable(name = "facultyId") long facultyId) {
         try {
-            List<Section> sectionList = registrationImpl.getSectionByFaculty(facultyId);
+            List<Section> sectionList = sectionService.getSectionByFaculty(facultyId);
 
             Map<Long, List<FacultySectionDto>> facultySectionDtoMap
                     = sectionMapper.getFacultySectionDtoMap(sectionList);
@@ -94,11 +93,11 @@ public class ScheduleController {
             List<Schedule> scheduleList = scheduleService.getSchedules();
 
             List<AdminScheduleDto> scheduleDtoList = new ArrayList<>();
-            for(Schedule s : scheduleList) {
+            for (Schedule s : scheduleList) {
                 String entryName = s.getEntry().getName();
                 List<AdminSectionDto> sectionDtoList = sectionMapper.getAdminSectionDtoList(s.getSections());
 
-                AdminScheduleDto scheduleDto = scheduleMapper.getAdminScheduleDto(entryName,sectionDtoList);
+                AdminScheduleDto scheduleDto = scheduleMapper.getAdminScheduleDto(entryName, sectionDtoList);
                 scheduleDtoList.add(scheduleDto);
             }
 

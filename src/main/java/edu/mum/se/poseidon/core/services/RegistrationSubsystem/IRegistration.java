@@ -10,6 +10,4 @@ public interface IRegistration {
     void registerToSection(Long studentId, Long sectionId) throws PoseidonException;
 
     List<Section> getAvailableSections(Long studentId) throws PoseidonException;
-
-    List<Section> getRegisteredSectionByStudent(Long studentId);
 }

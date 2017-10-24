@@ -1,8 +1,10 @@
 package edu.mum.se.poseidon.core.services;
 
 import edu.mum.se.poseidon.core.controllers.PoseidonException;
+import edu.mum.se.poseidon.core.repositories.FacultyRepository;
 import edu.mum.se.poseidon.core.repositories.SectionRepository;
 import edu.mum.se.poseidon.core.repositories.models.Section;
+import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import java.util.List;
 public class SectionService {
 
     private SectionRepository sectionRepository;
+    private FacultyRepository facultyRepository;
 
     @Autowired
-    public SectionService(SectionRepository sectionRepository) {
+    public SectionService(SectionRepository sectionRepository, FacultyRepository facultyRepository) {
         this.sectionRepository = sectionRepository;
+        this.facultyRepository = facultyRepository;
     }
 
     public Section createSection(Section section) {
@@ -47,6 +51,18 @@ public class SectionService {
 
     public List<Section> getSectionList() {
         return sectionRepository.findSectionsByDeleted(false);
+    }
+
+    public List<Section> getRegisteredSectionByStudent(Long studentId) {
+        return sectionRepository.findSectionsByStudentId(studentId);
+    }
+
+    public List<Section> getSectionByFaculty(long facultyId) {
+        Faculty faculty = facultyRepository.findOne(facultyId);
+        if (faculty == null) {
+            throw new RuntimeException("Faculty not found");
+        }
+        return sectionRepository.findByFaculty(faculty);
     }
 
     public Section getSection(Long id) {
