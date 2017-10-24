@@ -16,7 +16,7 @@ public class Student extends User {
     @ManyToOne
     @JoinColumn(name = "entry_id", nullable = true)
     private Entry entry;
-    @OneToMany(mappedBy = "id.student")
+    @OneToMany(mappedBy = "id.student", cascade = CascadeType.ALL)
     private List<StudentSection> studentSections;
 
     public String getStudentId() {

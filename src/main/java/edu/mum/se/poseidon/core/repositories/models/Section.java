@@ -23,7 +23,7 @@ public class Section
     @JoinColumn(name = "FACULTY_ID", nullable = false)
     private Faculty faculty;
 
-    @OneToMany(mappedBy = "id.section")
+    @OneToMany(mappedBy = "id.section", cascade = CascadeType.ALL)
     private List<StudentSection> studentSections;
 
     @ManyToOne

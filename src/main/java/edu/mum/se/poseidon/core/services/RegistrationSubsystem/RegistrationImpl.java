@@ -46,10 +46,8 @@ public class RegistrationImpl implements IRegistration {
         sspk.setSection(section);
         ss.setPassed(false);
         ss.setId(sspk);
-        section.getStudentSections().add(ss);
         student.getStudentSections().add(ss);
         studentRepository.save(student);
-        sectionRepository.save(section);
     }
 
     @Override
