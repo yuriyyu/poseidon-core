@@ -8,6 +8,7 @@ import edu.mum.se.poseidon.core.repositories.*;
 import edu.mum.se.poseidon.core.repositories.models.*;
 import edu.mum.se.poseidon.core.repositories.models.users.Faculty;
 import edu.mum.se.poseidon.core.services.Schedule.BlockTrack;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,8 @@ public class ScheduleService {
     private final int FPP_NUMBER = 390;
     private final int MPP_NUMBER = 401;
     private final String DEFAULT_FACULTY = "UNSTAFF";
+    private final int ELECTIVE_FOR_OPT = 5;
+    private final int ELECTIVE_FOR_USRES = 8;
 
     private ScheduleRepository scheduleRepository;
     private EntryRepository entryRepository;
@@ -130,46 +133,71 @@ public class ScheduleService {
 
         // Calculate Sections to Offer
         Map<Track, List<BlockTrack>> map = getBlockTracks(entry);
+        boolean hasFpp = entry.getnFppOpt() > 0 || entry.getnFppStudents() > 0;
+
+        // Verify Block and Track
+
+        if (hasFpp && blocks.size() < 3)
+            throw new RuntimeException("Insufficient Blocks created. Expected at least: 3");
+        else if (blocks.size() < 2)
+            throw new RuntimeException("Insufficient Blocks created. Expected at least: 2");
 
         // Create Section
         // Save Section
         // Assign Section
-        List<Section> mppSections = new ArrayList<>();
-        List<Section> fppSections = new ArrayList<>();
+        List<Section> sections = new ArrayList<>();
 
-        // SCI and FPP - MPP
-        BlockTrack sciBlock = map.get(Track.MPP).get(0);
-        BlockTrack mpp = map.get(Track.MPP).get(1);
+        if (hasFpp) {
 
-//        for (int i = 0; i < getNSection(sciBlock.getnStudent()); i++) {
-//            mppSections.addAll(assignSectionToBlock(sciBlock.getBlock(), SCI_NUMBER));
-//            mppSections.addAll(assignSectionToBlock(mpp.getBlock(), MPP_NUMBER));
-//        }
+            sections.addAll(assignSectionToBlock(map.get(Track.MPP).get(0), SCI_NUMBER));
+            sections.addAll(assignSectionToBlock(map.get(Track.MPP).get(1), MPP_NUMBER));
 
-        mppSections.addAll(assignSectionToBlock(sciBlock, SCI_NUMBER));
-        mppSections.addAll(assignSectionToBlock(mpp, MPP_NUMBER));
+            sections.addAll(assignSectionToBlock(map.get(Track.FPP).get(0), SCI_NUMBER));
+            sections.addAll(assignSectionToBlock(map.get(Track.FPP).get(1), FPP_NUMBER));
+            sections.addAll(assignSectionToBlock(map.get(Track.FPP).get(2), MPP_NUMBER));
 
-        // Elective Block
-        for (BlockTrack b : map.get(Track.MPP).stream().skip(2).collect(Collectors.toList())) {
-            List<Integer> numbers = findElectiveForBlock(b.getnStudent());
-            for (int i = 0; i < numbers.size(); i++) {
-                mppSections.addAll(assignSectionToBlock(b.getBlock(), numbers.get(i)));
-            }
+            electiveBlock(map, sections, Track.FPP);
+            electiveBlock(map, sections, Track.MPP);
+        } else {
+            sections.addAll(assignSectionToBlock(map.get(Track.MPP).get(0), SCI_NUMBER));
+            sections.addAll(assignSectionToBlock(map.get(Track.MPP).get(1), MPP_NUMBER));
+
+            electiveBlock(map, sections, Track.MPP);
         }
-
         // findFaculty
         // addSection to Faculty
         // assignFaculty to Section
 
-        assignFacultyToSection(mppSections);
+        assignFacultyToSection(sections);
 
         // save Schedule
         schedule.setName(entry.getName() + " Schedule");
         schedule.setEntry(entry);
-        schedule.setSections(mppSections);
+        schedule.setSections(sections);
         scheduleRepository.save(schedule);
 
         return schedule;
+    }
+
+    private void electiveBlock(Map<Track, List<BlockTrack>> map,
+                               List<Section> mppSections, Track track) {
+        int cnt = 0;
+        int skip = Track.MPP == track ? 2 : 3;
+        for (BlockTrack b : map.get(track).stream().skip(skip).collect(Collectors.toList())) {
+            cnt++;
+            int n = b.getnStudent();
+
+            // OPT - cnt = 5
+            if (cnt == ELECTIVE_FOR_OPT)
+                n = b.getoStudent() + b.getuStudent();
+            else if (cnt > ELECTIVE_FOR_OPT)
+                n = b.getuStudent();
+
+            List<Integer> numbers = findElectiveForBlock(n);
+            for (int i = 0; i < numbers.size(); i++) {
+                mppSections.addAll(assignSectionToBlock(b.getBlock(), numbers.get(i)));
+            }
+        }
     }
 
     private void assignFacultyToSection(List<Section> mppSections) {
@@ -312,7 +340,7 @@ public class ScheduleService {
         return blockRepository.findAllByEntryAndDeleted(entry, false)
                 .stream()
                 .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .map(x -> new BlockTrack(x, n))
+                .map(x -> new BlockTrack(x, n, entry.getnFppOpt(), entry.getUsRes()))
                 .collect(Collectors.toList());
     }
 
@@ -321,7 +349,7 @@ public class ScheduleService {
         return blockRepository.findAllByEntryAndDeleted(entry, false)
                 .stream()
                 .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .map(x -> new BlockTrack(x, n))
+                .map(x -> new BlockTrack(x, n, entry.getnMppOpt(), entry.getUsRes()))
                 .collect(Collectors.toList());
     }
 
@@ -343,14 +371,6 @@ public class ScheduleService {
         return blockRepository.findAllByEntryAndDeleted(entry, false)
                 .stream()
                 .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .collect(Collectors.toList());
-    }
-
-    private List<BlockTrack> getSortedBlockTracks(Entry entry) {
-        return blockRepository.findAllByEntryAndDeleted(entry, false)
-                .stream()
-                .sorted(Comparator.comparing(x -> x.getStartDate()))
-                .map(x -> new BlockTrack(x, getTotalStudents(entry)))
                 .collect(Collectors.toList());
     }
 }

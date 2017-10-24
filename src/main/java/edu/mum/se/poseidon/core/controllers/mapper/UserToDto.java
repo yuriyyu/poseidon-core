@@ -13,38 +13,39 @@ import edu.mum.se.poseidon.core.repositories.models.users.User;
 
 @Component
 public class UserToDto {
-	private final String rolePrefix = "ROLE_";
-	public UserToDto() {
-	}
+    private final String rolePrefix = "ROLE_";
 
-	public AuthenticationDto getAuthenticationDto(User user) {
-		
-		if (user == null)
-			return null;
+    public UserToDto() {
+    }
 
-		AuthenticationDto dto = new AuthenticationDto();
-		dto.setId(user.getId());
-		dto.setUsername(user.getUsername());
-		dto.setPassword(user.getPassword());
-		dto.setRoles(getRole(user.getClass()));
-		
-		return dto;
-	}
+    public AuthenticationDto getAuthenticationDto(User user) {
 
-	/*
-	 * Gets roles by the instance of Class
-	 * Because currently we dont have many roles.
-	 */
-	private List<String> getRole(Class<? extends User> user) {
-		List<String> roles = new ArrayList<String>();
+        if (user == null)
+            return null;
 
-		if (user == Admin.class)
-			roles.add(rolePrefix + "ADMIN");
-		else if (user == Faculty.class)
-			roles.add(rolePrefix +"FACULTY");
-		else if(user == Student.class)
-			roles.add(rolePrefix +"STUDENT");
+        AuthenticationDto dto = new AuthenticationDto();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setPassword(user.getPassword());
+        dto.setRoles(getRole(user.getClass()));
 
-		return roles;
-	}
+        return dto;
+    }
+
+    /*
+     * Gets roles by the instance of Class
+     * Because currently we dont have many roles.
+     */
+    private List<String> getRole(Class<? extends User> user) {
+        List<String> roles = new ArrayList<String>();
+
+        if (user == Admin.class)
+            roles.add(rolePrefix + "ADMIN");
+        else if (user == Faculty.class)
+            roles.add(rolePrefix + "FACULTY");
+        else if (user == Student.class)
+            roles.add(rolePrefix + "STUDENT");
+
+        return roles;
+    }
 }

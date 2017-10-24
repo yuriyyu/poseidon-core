@@ -1,7 +1,5 @@
 package edu.mum.se.poseidon.core.services.Schedule;
 
-import edu.mum.se.poseidon.core.controllers.dto.BlockDto;
-import edu.mum.se.poseidon.core.controllers.dto.SectionDto;
 import edu.mum.se.poseidon.core.repositories.models.Block;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 
@@ -10,7 +8,10 @@ import java.util.List;
 
 public class BlockTrack {
     private Block block;
-    private int nStudent;
+    private int nStudent; // TOTAL
+    private int oStudent; //OPT
+    private int uStudent; // USRES
+
     private List<Section> sections = new ArrayList<Section>();
 
     /**
@@ -18,9 +19,27 @@ public class BlockTrack {
      * @param block Block Entity
      * @param nStudent Number of Student in the Block
      */
-    public BlockTrack(Block block, int nStudent) {
+    public BlockTrack(Block block, int nStudent, int opt, int usres) {
         this.block = block;
         this.nStudent = nStudent;
+        this.oStudent = opt;
+        this.uStudent = usres;
+    }
+
+    public int getoStudent() {
+        return oStudent;
+    }
+
+    public void setoStudent(int oStudent) {
+        this.oStudent = oStudent;
+    }
+
+    public int getuStudent() {
+        return uStudent;
+    }
+
+    public void setuStudent(int uStudent) {
+        this.uStudent = uStudent;
     }
 
     public void addSection(Section section) {

@@ -9,8 +9,26 @@ public class BlockTrackDto {
     private BlockDto blockDto;
     private List<SectionDto> sectionDtos;
     private int nStudent;
+    private int oStudent;
+    private int uStudent;
 
     // Getter and Setter
+
+    public int getoStudent() {
+        return oStudent;
+    }
+
+    public void setoStudent(int oStudent) {
+        this.oStudent = oStudent;
+    }
+
+    public int getuStudent() {
+        return uStudent;
+    }
+
+    public void setuStudent(int uStudent) {
+        this.uStudent = uStudent;
+    }
 
     public int getnStudent() {
         return nStudent;

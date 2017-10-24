@@ -51,7 +51,7 @@ public class BlockMapper {
         if (dto == null)
             return null;
 
-        BlockTrack bt = new BlockTrack(getBlock(dto.getBlockDto()), dto.getnStudent());
+        BlockTrack bt = new BlockTrack(getBlock(dto.getBlockDto()), dto.getnStudent(), dto.getoStudent(), dto.getuStudent());
         List<Section> sections = dto.getSectionDtos().stream()
                 .map(x -> sectionMapper.getSectionFrom(x))
                 .collect(Collectors.toList());

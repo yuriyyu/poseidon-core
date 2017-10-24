@@ -1,22 +1,14 @@
 package edu.mum.se.poseidon.core.controllers.mapper;
 
+import edu.mum.se.poseidon.core.controllers.dto.CourseDto;
+import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
+import edu.mum.se.poseidon.core.repositories.models.Course;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import edu.mum.se.poseidon.core.controllers.dto.CourseInfoDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import edu.mum.se.poseidon.core.controllers.dto.BlockDto;
-import edu.mum.se.poseidon.core.controllers.dto.CourseDto;
-import edu.mum.se.poseidon.core.repositories.models.Block;
-import edu.mum.se.poseidon.core.repositories.models.Course;
 
 @Component
 public class CourseMapper {
