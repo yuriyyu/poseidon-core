@@ -12,15 +12,15 @@ INSERT INTO faculties (id) VALUES ((SELECT id FROM users WHERE first_name='UNSTA
 INSERT INTO users (dcreated, is_deleted, dupdated, first_name, last_name, password, username, type) VALUES (now(), FALSE, now(), 'Stu1', 'Dent1', 'password', 'student1', 'student1');
 INSERT INTO students (student_id, id, entry_id) VALUES (986001, (SELECT id FROM users WHERE first_name='Stu1' and last_name='Dent1'), 1);
 
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 390,'Fundamental Programming Practices: Modern Programming Methods and Systems ');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 401,'Modern Programming Practices: Current Concepts and Best Practices in Software Development ');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 422,'Database Systems: Capturing the Organizing Power of Information ');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 390,'Fundamental Programming Practices');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 401,'Modern Programming Practices');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 422,'Database Systems');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 423,'Systems Analysis and Design');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 425,'Software Engineering: Knowledge Is the Basis of Action ');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 430,' Business Intelligence and Data Mining');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 435,'Algorithms: Discovering the Hidden Dynamics of Natural Law');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 440,'Compiler Construction: Connecting Name and Form ');
-INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 450,'Computer Networks: Connecting the Parts and Whole');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 425,'Software Engineering');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 430,'Business Intelligence and Data Mining');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 435,'Algorithms');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 440,'Compiler Construction');
+INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 450,'Computer Networks');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 465,'Operating Systems');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 467,'Secure Coding Practices');
 INSERT INTO courses (dcreated, is_deleted, dupdated, number, name) VALUES (now(), FALSE, now(), 470,'Artificial Intelligence');
