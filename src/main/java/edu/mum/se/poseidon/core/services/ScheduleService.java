@@ -156,13 +156,13 @@ public class ScheduleService {
             sections.addAll(assignSectionToBlock(map.get(Track.FPP).get(1), FPP_NUMBER));
             sections.addAll(assignSectionToBlock(map.get(Track.FPP).get(2), MPP_NUMBER));
 
-            electiveBlock(map, sections, Track.FPP);
-            electiveBlock(map, sections, Track.MPP);
+            sections.addAll(electiveBlock(map, Track.FPP));
+            sections.addAll(electiveBlock(map, Track.MPP));
         } else {
             sections.addAll(assignSectionToBlock(map.get(Track.MPP).get(0), SCI_NUMBER));
             sections.addAll(assignSectionToBlock(map.get(Track.MPP).get(1), MPP_NUMBER));
 
-            electiveBlock(map, sections, Track.MPP);
+            sections.addAll(electiveBlock(map, Track.MPP));
         }
         // findFaculty
         // addSection to Faculty
@@ -179,8 +179,8 @@ public class ScheduleService {
         return schedule;
     }
 
-    private void electiveBlock(Map<Track, List<BlockTrack>> map,
-                               List<Section> mppSections, Track track) {
+    private List<Section> electiveBlock(Map<Track, List<BlockTrack>> map, Track track) {
+        List<Section> sections = new ArrayList();
         int cnt = 0;
         int skip = Track.MPP == track ? 2 : 3;
         for (BlockTrack b : map.get(track).stream().skip(skip).collect(Collectors.toList())) {
@@ -195,9 +195,10 @@ public class ScheduleService {
 
             List<Integer> numbers = findElectiveForBlock(n);
             for (int i = 0; i < numbers.size(); i++) {
-                mppSections.addAll(assignSectionToBlock(b.getBlock(), numbers.get(i)));
+                sections.addAll(assignSectionToBlock(b.getBlock(), numbers.get(i)));
             }
         }
+        return sections;
     }
 
     private void assignFacultyToSection(List<Section> mppSections) {
