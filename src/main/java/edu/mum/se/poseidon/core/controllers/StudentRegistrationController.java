@@ -6,6 +6,7 @@ import edu.mum.se.poseidon.core.controllers.wrapper.ErrorResponseWrapper;
 import edu.mum.se.poseidon.core.controllers.wrapper.FailResponseWrapper;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 import edu.mum.se.poseidon.core.services.RegistrationSubsystem.RegistrationImpl;
+import edu.mum.se.poseidon.core.services.SectionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,15 @@ import java.util.List;
 public class StudentRegistrationController {
 
     private RegistrationImpl registrationImpl;
+    private SectionService sectionService;
     private static final Logger logger = LoggerFactory.getLogger(AdminEntryController.class);
     private SectionMapper sectionMapper;
 
-    public StudentRegistrationController(RegistrationImpl registrationImpl, SectionMapper sectionMapper) {
+    public StudentRegistrationController(RegistrationImpl registrationImpl, SectionMapper sectionMapper,
+                                         SectionService sectionService) {
         this.registrationImpl = registrationImpl;
         this.sectionMapper = sectionMapper;
+        this.sectionService = sectionService;
     }
 
     @SuppressWarnings("unchecked")
@@ -51,7 +55,7 @@ public class StudentRegistrationController {
     public ResponseEntity<?> getRegisteredSectionByStudent(@PathVariable(name = "studentId") long studentId) {
         logger.info("'getRegisteredSectionByStudent' request is received.");
         try {
-            List<Section> sectionList = registrationImpl.getRegisteredSectionByStudent(studentId);
+            List<Section> sectionList = sectionService.getRegisteredSectionByStudent(studentId);
             List<SectionDto> sectionDtoList = sectionMapper.getSectionDtoListFrom(sectionList);
             return new ResponseEntity(sectionDtoList, HttpStatus.OK);
         } catch (Exception e) {
