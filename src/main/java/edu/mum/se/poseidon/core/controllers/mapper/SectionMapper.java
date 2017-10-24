@@ -8,10 +8,7 @@ import edu.mum.se.poseidon.core.controllers.dto.StudentSectionDto;
 import edu.mum.se.poseidon.core.repositories.models.Section;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -145,6 +142,8 @@ public class SectionMapper {
         return sectionList.stream()
                 .map(s -> getAdminSectionDto(s))
                 .filter(dto -> dto != null)
+                .sorted(Comparator.comparing(AdminSectionDto::getStartDate)
+                        .thenComparing(AdminSectionDto::getCourseName))
                 .collect(Collectors.toList());
     }
 
